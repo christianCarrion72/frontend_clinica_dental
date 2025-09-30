@@ -1,1 +1,84 @@
-<p>dashboard works!</p>
+<div class="min-h-screen bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <h1 class="text-xl font-bold text-gray-800">Clínica Dental</h1>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <span class="text-gray-700 mr-4">{{userEmail}}</span>
+          <button
+            (click)="logout()"
+            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Role specific content -->
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Administrador -->
+      <div *ngIf="userRole === 'Administrador'" class="space-y-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Panel de Administrador</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-blue-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Gestión de Usuarios</h3>
+              <p class="text-gray-600">Administra los usuarios del sistema</p>
+            </div>
+            <div class="bg-green-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Reportes</h3>
+              <p class="text-gray-600">Visualiza reportes y estadísticas</p>
+            </div>
+            <div class="bg-purple-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Configuración</h3>
+              <p class="text-gray-600">Configura los parámetros del sistema</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Administrativo -->
+      <div *ngIf="userRole === 'Administrativo'" class="space-y-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Panel Administrativo</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-yellow-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Gestión de Citas</h3>
+              <p class="text-gray-600">Administra las citas de los pacientes</p>
+            </div>
+            <div class="bg-pink-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Pacientes</h3>
+              <p class="text-gray-600">Gestiona la información de los pacientes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dentista -->
+      <div *ngIf="userRole === 'Dentista'" class="space-y-6">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Panel del Dentista</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-indigo-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Mis Citas</h3>
+              <p class="text-gray-600">Visualiza y gestiona tus citas programadas</p>
+            </div>
+            <div class="bg-teal-100 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold mb-2">Historiales Clínicos</h3>
+              <p class="text-gray-600">Accede a los historiales de tus pacientes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

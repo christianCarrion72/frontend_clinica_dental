@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'pacientes',
+    loadChildren: () => import('./pages/pacientes/pacientes.module').then(m => m.PacientesModule),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

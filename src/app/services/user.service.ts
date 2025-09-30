@@ -14,10 +14,9 @@ export interface User {
     nombre: string;
     descripcion: string;
   };
-  // Propiedades específicas para cada tipo de usuario
-  especialidad?: string; // Para dentistas
-  area?: string; // Para administrativos
-  cargo?: string; // Para administrativos
+  especialidad?: string; 
+  area?: string; 
+  cargo?: string; 
 }
 
 export interface CreateUserDto {
@@ -27,9 +26,9 @@ export interface CreateUserDto {
   telefono: string;
   direccion: string;
   estado?: boolean;
-  especialidad?: string; // Para dentistas
-  area?: string; // Para administrativos
-  cargo?: string; // Para administrativos
+  especialidad?: string; 
+  area?: string;
+  cargo?: string;
 }
 
 export interface UpdateUserDto {
@@ -39,9 +38,9 @@ export interface UpdateUserDto {
   telefono?: string;
   direccion?: string;
   estado?: boolean;
-  especialidad?: string; // Para dentistas
-  area?: string; // Para administrativos
-  cargo?: string; // Para administrativos
+  especialidad?: string; 
+  area?: string;
+  cargo?: string;
 }
 
 @Injectable({

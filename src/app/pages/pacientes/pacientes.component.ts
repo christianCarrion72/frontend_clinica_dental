@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { PacienteService } from '../../services/paciente.service';
 import { FamiliarService } from '../../services/familiar.service';
 import { CreatePacienteDto, Paciente, CreateFamiliarDto } from '../../services/paciente.service';
+import { forkJoin } from 'rxjs';
 
 interface FamiliarForm {
   nombre: string;
@@ -89,10 +90,8 @@ export class PacientesComponent implements OnInit {
     if (this.pacienteForm.valid) {
       this.isLoading = true;
       
-      // Obtener los valores del formulario
       const formValues = this.pacienteForm.getRawValue();
       
-      // Crear el objeto de datos del paciente en el formato correcto
       const pacienteData: CreatePacienteDto = {
         nombre: formValues.nombre,
         fecha_nacimiento: new Date(formValues.fecha_nacimiento),
@@ -123,33 +122,41 @@ export class PacientesComponent implements OnInit {
         this.pacienteService.create(pacienteData)
           .subscribe({
             next: (paciente) => {
-              this.toastr.success('Paciente registrado exitosamente');
-              this.resetForm();
-              this.loadPacientes();
-
-              // Si hay familiares, los creamos después de crear el paciente
               if (formValues.familiares && formValues.familiares.length > 0) {
-                formValues.familiares.forEach((familiar: FamiliarForm) => {
+                const familiaresObservables = formValues.familiares.map((familiar: FamiliarForm) => {
                   const familiarData: CreateFamiliarDto = {
                     paciente_id: paciente.id,
                     nombre: familiar.nombre,
-                    parentesco: familiar.parentesco as 'madre' | 'padre' | 'tutor',
+                    parentesco: this.mapParentesco(familiar.parentesco),
                     celular: familiar.celular
                   };
-                  this.familiarService.create(familiarData).subscribe({
-                    error: (error) => {
-                      this.toastr.error(`Error al registrar familiar ${familiar.nombre}`);
-                      console.error('Error:', error);
-                    }
-                  });
+                  return this.familiarService.create(familiarData);
                 });
+
+                forkJoin(familiaresObservables).subscribe({
+                  next: () => {
+                    this.toastr.success('Paciente y familiares registrados exitosamente');
+                    this.resetForm();
+                    this.loadPacientes();
+                  },
+                  error: (error) => {
+                    this.toastr.error('Error al registrar los familiares');
+                    console.error('Error:', error);
+                  },
+                  complete: () => {
+                    this.isLoading = false;
+                  }
+                });
+              } else {
+                this.toastr.success('Paciente registrado exitosamente');
+                this.resetForm();
+                this.loadPacientes();
+                this.isLoading = false;
               }
             },
             error: (error) => {
               this.toastr.error('Error al registrar el paciente');
               console.error('Error:', error);
-            },
-            complete: () => {
               this.isLoading = false;
             }
           });
@@ -161,6 +168,17 @@ export class PacientesComponent implements OnInit {
           control.markAsTouched();
         }
       });
+    }
+  }
+
+  private mapParentesco(parentesco: string): 'madre' | 'padre' | 'tutor' {
+    switch (parentesco.toLowerCase()) {
+      case 'madre':
+        return 'madre';
+      case 'padre':
+        return 'padre';
+      default:
+        return 'tutor';
     }
   }
 

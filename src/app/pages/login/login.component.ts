@@ -21,7 +21,6 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    // Si ya está autenticado, redirigir al dashboard
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
@@ -29,7 +28,6 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (!this.loginData.correo || !this.loginData.contrasena) {
-      // Aquí podrías agregar una alerta o mensaje de error
       console.error('Por favor, complete todos los campos');
       return;
     }
@@ -41,7 +39,6 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Error al iniciar sesión:', error);
-        // Aquí podrías mostrar un mensaje de error al usuario
       }
     });
   }

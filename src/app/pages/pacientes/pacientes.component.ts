@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PacienteService } from '../../services/paciente.service';
 import { FamiliarService } from '../../services/familiar.service';
 import { CreatePacienteDto, Paciente, CreateFamiliarDto } from '../../services/paciente.service';
 import { forkJoin } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 interface FamiliarForm {
   nombre: string;
@@ -15,7 +16,9 @@ interface FamiliarForm {
 @Component({
   selector: 'app-pacientes',
   templateUrl: './pacientes.component.html',
-  styleUrls: ['./pacientes.component.css']
+  styleUrls: ['./pacientes.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class PacientesComponent implements OnInit {
   pacienteForm!: FormGroup;
@@ -24,6 +27,7 @@ export class PacientesComponent implements OnInit {
   isLoading = false;
   currentPacienteId: number | null = null;
   parentescos = ['Padre', 'Madre', 'Hermano/a', 'Hijo/a', 'Tío/a', 'Abuelo/a', 'Otro'];
+  searchQuery: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -84,6 +88,36 @@ export class PacientesComponent implements OnInit {
 
   removeFamiliar(index: number) {
     this.familiares.removeAt(index);
+  }
+
+  searchPacientes() {
+    if (!this.searchQuery.trim()) {
+      this.loadPacientes();
+      return;
+    }
+
+    this.isLoading = true;
+    this.pacienteService.search(this.searchQuery.trim())
+      .subscribe({
+        next: (response) => {
+          this.pacientes = response.data;
+          if (response.data.length === 0) {
+            this.toastr.info('No se encontraron pacientes');
+          }
+        },
+        error: (error) => {
+          this.toastr.error('Error al buscar pacientes');
+          console.error('Error:', error);
+        },
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.loadPacientes();
   }
 
   onSubmit() {
@@ -198,16 +232,13 @@ export class PacientesComponent implements OnInit {
     this.editMode = true;
     this.currentPacienteId = paciente.id;
     
-    // Limpiar el array de familiares antes de cargar los nuevos
     while (this.familiares.length) {
       this.familiares.removeAt(0);
     }
 
-    // Formatear la fecha para el input type="date"
     const fechaNacimiento = new Date(paciente.fecha_nacimiento);
     const fechaFormateada = fechaNacimiento.toISOString().split('T')[0];
 
-    // Cargar los datos del paciente en el formulario
     this.pacienteForm.patchValue({
       nombre: paciente.nombre,
       fecha_nacimiento: fechaFormateada,
@@ -217,7 +248,6 @@ export class PacientesComponent implements OnInit {
       celular: paciente.celular
     });
 
-    // Cargar los familiares si existen
     if (paciente.familiares) {
       paciente.familiares.forEach(familiar => {
         const familiarGroup = this.formBuilder.group({

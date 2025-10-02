@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CreatePacienteDto {
@@ -32,6 +32,13 @@ export interface Familiar extends CreateFamiliarDto {
   id: number;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface SearchResponse {
+  success: boolean;
+  message: string;
+  data: Paciente[];
+  total: number;
 }
 
 @Injectable({
@@ -68,5 +75,13 @@ export class PacienteService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  search(query: string): Observable<SearchResponse> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<SearchResponse>(`${this.apiUrl}/search`, {
+      headers: this.getHeaders(),
+      params
+    });
   }
 }

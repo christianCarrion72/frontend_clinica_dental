@@ -171,7 +171,6 @@ export class CitaDiaComponent implements OnInit {
     );
   }
 
-  // Cuando cambia la especialidad, resetear la selección de horario en el formulario
   onEspecialidadChange(): void {
     this.formulario.horarioFechaId = '';
   }

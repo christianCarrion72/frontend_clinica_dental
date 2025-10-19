@@ -32,28 +32,6 @@ interface Cita {
   createdAt: string;
 }
 
-interface Paciente {
-  id: number;
-  nombre: string;
-  celular: string;
-  email: string;
-}
-
-interface HorarioFecha {
-  id: number;
-  fecha: string;
-  disponible: boolean;
-  horario: {
-    id: number;
-    horaInicio: string;
-    horaFin: string;
-  };
-  dentista: {
-    id: number;
-    especialidad: string;
-  };
-}
-
 @Component({
   selector: 'app-citas',
   standalone: true,

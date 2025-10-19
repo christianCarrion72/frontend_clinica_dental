@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-2xl p-8 mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h1 class="text-4xl font-bold text-gray-800">{{ fechaFormateada }}</h1>
+          <p class="text-gray-600">Gestión de citas para este día</p>
+        </div>
+        <button
+          (click)="volver()"
+          class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+        >
+          ← Volver al calendario
+        </button>
+      </div>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Citas del día -->
+    <div class="bg-white rounded-lg shadow-2xl overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+        <h2 class="text-2xl font-bold text-white">Citas Programadas ({{ citas.length }})</h2>
+      </div>
+
+      <div class="p-8">
+        <!-- Sin citas -->
+        <div *ngIf="citas.length === 0" class="text-center py-12 text-gray-500">
+          <p class="text-lg mb-4">No hay citas programadas para este día</p>
+          <p class="text-sm">Haz clic en "Nueva Cita" para crear una</p>
+        </div>
+
+        <!-- Lista de citas -->
+        <div *ngIf="citas.length > 0" class="space-y-4">
+          <ng-container *ngFor="let cita of citas">
+            <div class="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-lg hover:shadow-lg transition-shadow">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-gray-800">{{ cita.paciente.nombre }}</h3>
+                  <p class="text-sm text-gray-600 mt-1">
+                    <strong>Hora:</strong> {{ cita.horarioFecha.horario.horaInicio.substring(0, 5) }} - 
+                    {{ cita.horarioFecha.horario.horaFin.substring(0, 5) }}
+                  </p>
+                </div>
+                <span [ngClass]="getColorForState(cita.estado)" class="text-white text-xs font-bold px-3 py-1 rounded-full">
+                  {{ cita.estado | uppercase }}
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p class="text-sm text-gray-700">
+                    <strong>Consultorio:</strong> {{ cita.consultorio }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-700">
+                    <strong>Teléfono:</strong> {{ cita.paciente.celular }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-700">
+                    <strong>Especialidad:</strong> 
+                    <span class="text-blue-600 font-semibold">{{ cita.horarioFecha.dentista.especialidad }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <p class="text-sm text-gray-700">
+                  <strong>Observaciones:</strong> {{ cita.observaciones }}
+                </p>
+              </div>
+
+              <div class="flex gap-2">
+                <button
+                  (click)="editarCita(cita)"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm"
+                >
+                  ✏️ Editar
+                </button>
+                <button
+                  (click)="eliminarCita(cita.id)"
+                  class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm"
+                >
+                  🗑️ Eliminar
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón Nueva Cita -->
+    <div class="text-center mb-8">
+      <button
+        *ngIf="!showFormulario"
+        (click)="abrirFormulario()"
+        class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-8 rounded-lg transition-all text-lg"
+      >
+        + Nueva Cita
+      </button>
+    </div>
+
+    <!-- Formulario -->
+    <div *ngIf="showFormulario" class="bg-white rounded-lg shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-6">
+        <h2 class="text-2xl font-bold text-white">
+          {{ editandoCita ? 'Editar Cita' : 'Nueva Cita' }}
+        </h2>
+      </div>
+
+      <div class="p-8 space-y-6">
+        <!-- Paciente -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Paciente</label>
+          <select
+            [(ngModel)]="formulario.pacienteId"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+          >
+            <option value="">Selecciona un paciente</option>
+            <option *ngFor="let paciente of pacientes" [value]="paciente.id">
+              {{ paciente.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Especialidad del Dentista -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Especialidad del Dentista</label>
+          <select
+            [(ngModel)]="especialidadSeleccionada"
+            (change)="onEspecialidadChange()"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+          >
+            <option value="">Todas las especialidades</option>
+            <option *ngFor="let esp of especialidades" [value]="esp">
+              {{ esp }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Horario -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Horario Disponible</label>
+          <select
+            [(ngModel)]="formulario.horarioFechaId"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+          >
+            <option value="">Selecciona un horario</option>
+            <option *ngFor="let horario of getHorariosFiltrados()" [value]="horario.id">
+              {{ horario.horario.horaInicio.substring(0, 5) }} - {{ horario.horario.horaFin.substring(0, 5) }}
+              ({{ horario.dentista.especialidad }})
+            </option>
+          </select>
+          <p *ngIf="getHorariosFiltrados().length === 0" class="text-sm text-orange-600 mt-2">
+            No hay horarios disponibles para esta especialidad
+          </p>
+        </div>
+
+        <!-- Consultorio -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Consultorio</label>
+          <input
+            [(ngModel)]="formulario.consultorio"
+            type="text"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+            placeholder="Ej: Consultorio 1"
+          />
+        </div>
+
+        <!-- Estado -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Estado</label>
+          <select
+            [(ngModel)]="formulario.estado"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+          >
+            <option value="programada">Programada</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+
+        <!-- Observaciones -->
+        <div>
+          <label class="block text-gray-700 font-bold mb-2">Observaciones</label>
+          <textarea
+            [(ngModel)]="formulario.observaciones"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+            rows="4"
+            placeholder="Notas adicionales"
+          ></textarea>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex gap-4 pt-4">
+          <button
+            (click)="cancelarFormulario()"
+            class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            (click)="guardarCita()"
+            [disabled]="isLoading"
+            class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ isLoading ? 'Guardando...' : (editandoCita ? 'Actualizar Cita' : 'Crear Cita') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

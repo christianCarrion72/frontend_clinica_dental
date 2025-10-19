@@ -22,6 +22,16 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'citas',
+    loadComponent: () => import('./pages/citas/citas.component').then(m => m.CitasComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'cita-dia',
+    loadComponent: () => import('./pages/citas/cita-dia.component').then(m => m.CitaDiaComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

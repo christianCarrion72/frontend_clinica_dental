@@ -297,6 +297,7 @@ export class CitaDiaComponent implements OnInit {
   getColorForState(estado: string): string {
     switch(estado) {
       case 'programada': return 'bg-blue-500';
+      case 'confirmada': return 'bg-yellow-500';  
       case 'completada': return 'bg-green-500';
       case 'cancelada': return 'bg-red-500';
       default: return 'bg-gray-500';

@@ -167,4 +167,8 @@ export class CitasComponent implements OnInit {
            this.month === today.getMonth() && 
            this.year === today.getFullYear();
   }
+
+  volverDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
 }

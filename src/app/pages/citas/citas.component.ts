@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CitasService } from '../../services/cita.service';
 
 interface Cita {
@@ -35,7 +35,7 @@ interface Cita {
 @Component({
   selector: 'app-citas',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule,RouterModule],
   templateUrl: './citas.component.html',
   styleUrl: './citas.component.css'
 })

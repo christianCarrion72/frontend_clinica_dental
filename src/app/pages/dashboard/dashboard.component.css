@@ -1,0 +1,230 @@
+/* Animaciones para las tarjetas del dashboard */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicar animación escalonada a las tarjetas */
+.grid > div {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.grid > div:nth-child(1) { animation-delay: 0.1s; }
+.grid > div:nth-child(2) { animation-delay: 0.2s; }
+.grid > div:nth-child(3) { animation-delay: 0.3s; }
+.grid > div:nth-child(4) { animation-delay: 0.4s; }
+.grid > div:nth-child(5) { animation-delay: 0.5s; }
+
+/* Efecto de hover mejorado */
+.cursor-pointer {
+  position: relative;
+  overflow: hidden;
+}
+
+.cursor-pointer::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.cursor-pointer:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Efecto de brillo en hover */
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.cursor-pointer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.cursor-pointer:hover::after {
+  animation: shine 0.75s;
+}
+
+/* Estilos para el navbar */
+nav {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Badge para notificaciones (futuro) */
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 9999px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsive ajustments */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Mejora para el botón de cerrar sesión */
+button {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Efecto de pulso para tarjetas importantes */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(147, 51, 234, 0);
+  }
+}
+
+/* Aplicar pulso a la tarjeta de horarios */
+.bg-purple-100 {
+  animation: pulse 2s infinite;
+}
+
+/* Detener la animación al hacer hover */
+.bg-purple-100:hover {
+  animation: none;
+}
+
+/* Gradiente sutil en el fondo */
+.bg-gray-100 {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+}
+
+/* Sombra mejorada para las tarjetas principales */
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Transiciones suaves globales */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Efecto de enfoque para accesibilidad */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Ocultar el outline en clicks del mouse pero mantenerlo en teclado */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Estilo para el icono/emoji del título */
+h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Animación de entrada para el navbar */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+nav {
+  animation: slideDown 0.5s ease-out;
+}
+
+/* Efecto hover para el email del usuario */
+span.text-gray-700 {
+  transition: color 0.3s ease;
+}
+
+span.text-gray-700:hover {
+  color: #1f2937;
+}
+
+/* Grid responsivo mejorado */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Estilo para estados de carga (futuro) */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

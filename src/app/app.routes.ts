@@ -37,6 +37,10 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'welcome',
+    loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

@@ -1,0 +1,49 @@
+<div class="details" *ngIf="s.selectedPathology(); else placeholder">
+  <ng-container *ngTemplateOutlet="renderLevel; context: { $implicit: hierarchy, depth: 0 }"></ng-container>
+</div>
+<ng-template #placeholder>
+  <p class="details-placeholder">Pathology Detail Placeholder</p>
+</ng-template>
+
+<ng-template #renderLevel let-level let-depth="depth">
+  <ng-container *ngIf="level">
+    <ng-container *ngFor="let key of (level | keyvalue); let i = index">
+      <fieldset class="detail" [attr.data-name]="key.key">
+        <legend>{{key.key}}</legend>
+        <span class="options">
+          <ng-container *ngIf="$any(key.value)?.options; else arrayOptions">
+            <ng-container *ngFor="let opt of $any(key.value).options">
+              <span
+                class="option"
+                [class.selected]="isSelectedMulti($any(key.key), opt.value)"
+                (click)="toggleMulti($any(key.key), opt.value)"
+              >
+                <label>{{opt.label}}</label>
+              </span>
+            </ng-container>
+          </ng-container>
+          <ng-template #arrayOptions>
+            <ng-container *ngFor="let opt of $any(key.value)">
+              <span
+                class="option"
+                [class.selected]="isSelectedSingle($any(key.key), opt.value)"
+                (click)="toggleSingle($any(key.key), opt.value)"
+              >
+                <label>{{opt.label}}</label>
+              </span>
+            </ng-container>
+          </ng-template>
+        </span>
+      </fieldset>
+      <ng-container *ngIf="s.pathologyDetails()[$any(key.key)]">
+        <ng-container *ngIf="!$any(key.value)?.options">
+          <ng-container *ngFor="let opt of $any(key.value)">
+            <ng-container *ngIf="isSelectedSingle($any(key.key), opt.value) && opt.next">
+              <ng-container *ngTemplateOutlet="renderLevel; context: { $implicit: opt.next, depth: depth+1 }"></ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>

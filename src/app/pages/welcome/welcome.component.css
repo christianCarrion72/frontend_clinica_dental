@@ -1,0 +1,5 @@
+.welcome { padding: 16px; }
+.welcome-nav { margin-bottom: 12px; }
+.welcome-content { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+.patient-history { background: #eef9ef; padding: 16px; border-radius: 8px; }
+.patient-history h2 { margin: 0 0 12px 0; }

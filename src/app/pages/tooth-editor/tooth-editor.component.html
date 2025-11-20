@@ -1,0 +1,44 @@
+<div class="tooth-editor" (click)="close.emit()">
+  <div (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close.emit()">✕</button>
+    
+    <div class="editor-content">
+      <div class="left">
+        <h2 class="heading">Pathology - Tooth {{toothNumber}}</h2>
+        <app-pathology-types></app-pathology-types>
+        <app-pathology-details></app-pathology-details>
+        <app-action-buttons (save)="save()"></app-action-buttons>
+        <app-path-drawer></app-path-drawer>
+      </div>
+      <div class="center">
+        <app-zones></app-zones>
+      </div>
+      <div class="right">
+        <app-canvas-view 
+          view="front" 
+          [width]="322" 
+          [height]="380" 
+          [imageSrc]="frontImage" 
+          [shapes]="[]" 
+          [points]="s.frontPoints()" 
+          [isPathClosed]="s.frontClosed()" 
+          [isDrawing]="s.isDrawing()" 
+          [activeView]="s.activeView()" 
+          (drawPoint)="handleDrawFront($event)">
+        </app-canvas-view>
+        <app-canvas-view 
+          view="top" 
+          [width]="172" 
+          [height]="172" 
+          [imageSrc]="topImage" 
+          [shapes]="[]" 
+          [points]="s.topPoints()" 
+          [isPathClosed]="s.topClosed()" 
+          [isDrawing]="s.isDrawing()" 
+          [activeView]="s.activeView()" 
+          (drawPoint)="handleDrawTop($event)">
+        </app-canvas-view>
+      </div>
+    </div>
+  </div>
+</div>

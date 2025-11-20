@@ -1,0 +1,6 @@
+<ul class="zones">
+  <li *ngFor="let z of list" [class.disabled]="!activate">
+    <input type="checkbox" [id]="'pad-'+z.value" [value]="z.value" [checked]="s.selectedZones().includes(z.value)" (change)="s.toggleZone(z.value)" [disabled]="!activate" />
+    <label [attr.for]="'pad-'+z.value">{{z.label}}</label>
+  </li>
+</ul>

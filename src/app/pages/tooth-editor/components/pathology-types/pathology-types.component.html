@@ -1,0 +1,5 @@
+<div class="pathology-types">
+  <button *ngFor="let t of types" [class.active]="s.selectedPathology()===t.value" (click)="s.togglePathology(t.value)">
+    <label>{{t.label}}</label>
+  </button>
+</div>

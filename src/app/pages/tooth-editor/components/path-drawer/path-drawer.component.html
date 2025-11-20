@@ -1,0 +1,13 @@
+<div class="drawing-controls">
+  <div class="view-selector">
+    <button [class.active]="s.activeView()==='front'" (click)="s.setView('front')">Front View</button>
+    <button [class.active]="s.activeView()==='top'" (click)="s.setView('top')">Top View</button>
+  </div>
+  <textarea [value]="activePath" readonly placeholder="SVG path will appear here..."></textarea>
+  <div class="drawing-buttons">
+    <button (click)="s.startDrawing()">Start Drawing</button>
+    <button (click)="s.reset()">Reset</button>
+    <button (click)="s.copyPath()">Copy Path</button>
+    <button (click)="s.undo()" [disabled]="!canUndo || !s.isDrawing()">Undo</button>
+  </div>
+  </div>

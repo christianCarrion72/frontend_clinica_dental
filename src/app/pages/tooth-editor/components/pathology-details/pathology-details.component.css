@@ -1,0 +1,6 @@
+.details { margin-top: 8px; }
+.detail { margin-bottom: 10px; border: 1px dashed #d9e3d9; padding: 8px; }
+.options { display: flex; gap: 8px; flex-wrap: wrap; }
+.option { background: #fff; border: 1px solid #e1e8e1; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+.option.selected { background: #eaf6f0; border-color: #7fb69b; }
+.details-placeholder { color: #7a8c7a; }

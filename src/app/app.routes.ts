@@ -12,6 +12,35 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'usuarios',
+    loadComponent: () => import('./pages/usuarios/usuarios.component').then(m => m.UsuariosComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'pacientes',
+    loadChildren: () => import('./pages/pacientes/pacientes.module').then(m => m.PacientesModule),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'citas',
+    loadComponent: () => import('./pages/citas/citas.component').then(m => m.CitasComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'cita-dia',
+    loadComponent: () => import('./pages/citas/cita-dia.component').then(m => m.CitaDiaComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'horarios',
+    loadComponent: () => import('./pages/horarios/horarios.component').then(m => m.HorariosComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'welcome',
+    loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

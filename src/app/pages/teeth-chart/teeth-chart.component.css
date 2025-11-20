@@ -1,0 +1,39 @@
+.teeth-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+}
+
+.teeth-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tooth {
+  position: relative;
+  cursor: default; 
+}
+
+.tooth img {
+  display: block;
+  max-width: none;
+  height: auto;
+  pointer-events: auto; 
+  cursor: pointer;
+}
+
+.tooth .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  
+  path {
+    cursor: pointer;
+  }
+}

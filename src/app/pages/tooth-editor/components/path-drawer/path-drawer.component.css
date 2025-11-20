@@ -1,0 +1,5 @@
+.drawing-controls { margin-top: 12px; }
+.view-selector { display: flex; gap: 12px; margin-bottom: 8px; }
+.view-selector button.active { background: #0f4a3c; color: #fff; }
+textarea { width: 100%; min-height: 100px; margin: 8px 0; }
+.drawing-buttons { display: flex; gap: 10px; }

@@ -1,0 +1,17 @@
+<div class="welcome">
+  <div class="welcome-nav">
+    <a href="#" (click)="onPathologyClick()">Pathology</a>
+  </div>
+  <div class="welcome-content">
+    <app-teeth-chart (toothClick)="onPathologyClick()"></app-teeth-chart>
+    <div class="patient-history">
+      <h2>Patient History</h2>
+      <h3>Name:</h3>
+      <p>Test Patient</p>
+      <h3>Gender:</h3>
+      <p>Male</p>
+      <h3>Date of Birth</h3>
+      <p>01-01-1990</p>
+    </div>
+  </div>
+</div>

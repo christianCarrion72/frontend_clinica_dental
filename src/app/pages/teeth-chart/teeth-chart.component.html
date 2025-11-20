@@ -1,0 +1,45 @@
+<div class="teeth-chart">
+  <div class="teeth-row upper-front">
+    <div class="tooth" *ngFor="let n of upperTeeth" (click)="onToothClick(n)">
+      <img (click)="onToothClick(n); $event.stopPropagation()" [src]="toothImagesFrontView[n]" [alt]="'Tooth '+n" [width]="svgWidth('front')" [height]="svgHeight('front')" />
+      <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.front" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay" (click)="onToothClick(n); $event.stopPropagation()">
+        <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.front" fill="rgba(255,0,0,0.3)" stroke="red" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="teeth-row upper-top">
+    <div class="tooth" *ngFor="let n of upperTeeth" (click)="onToothClick(n)">
+      <img (click)="onToothClick(n); $event.stopPropagation()" [src]="toothImagesTopView[n]" [alt]="'Tooth '+n" [width]="svgWidth('top')" [height]="svgHeight('top')" />
+      <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.top" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay" (click)="onToothClick(n); $event.stopPropagation()">
+        <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.top" fill="rgba(255,0,0,0.3)" stroke="red" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="teeth-row lower-top">
+    <div class="tooth" *ngFor="let n of lowerTeeth" (click)="onToothClick(n)">
+      <img (click)="onToothClick(n); $event.stopPropagation()" [src]="toothImagesTopView[n]" [alt]="'Tooth '+n" [width]="svgWidth('top')" [height]="svgHeight('top')" />
+      <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.top" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay" (click)="onToothClick(n); $event.stopPropagation()">
+        <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.top" fill="rgba(255,0,0,0.3)" stroke="red" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="teeth-row lower-front">
+    <div class="tooth" *ngFor="let n of lowerTeeth" (click)="onToothClick(n)">
+      <img (click)="onToothClick(n); $event.stopPropagation()" [src]="toothImagesFrontView[n]" [alt]="'Tooth '+n" [width]="svgWidth('front')" [height]="svgHeight('front')" />
+      <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.front" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay" (click)="onToothClick(n); $event.stopPropagation()">
+        <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.front" fill="rgba(255,0,0,0.3)" stroke="red" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
+      </svg>
+    </div>
+  </div>
+
+  <app-tooth-editor
+    *ngIf="editingTooth !== null"
+    [patientChart]="patientChart!"
+    [toothNumber]="editingTooth!"
+    (saved)="onSaved($event)"
+    (close)="closeEditor()">
+  </app-tooth-editor>
+</div>

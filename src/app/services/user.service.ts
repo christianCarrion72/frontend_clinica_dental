@@ -47,7 +47,7 @@ export interface UpdateUserDto {
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/users';
 
   constructor(private http: HttpClient) { }
   

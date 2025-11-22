@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) { } 
 
   login(credentials: { correo: string; contrasena: string }): Observable<LoginResponse> {
 

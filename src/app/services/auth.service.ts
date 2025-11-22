@@ -13,7 +13,7 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/auth';
+  private apiUrl = 'http://localhost:3000/api/auth';
 
   constructor(
     private http: HttpClient,
@@ -21,12 +21,12 @@ export class AuthService {
   ) { }
 
   login(credentials: { correo: string; contrasena: string }): Observable<LoginResponse> {
-    
+
     const backendCredentials = {
       correo: credentials.correo,
       contraseña: credentials.contrasena
     };
-    
+
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, backendCredentials)
       .pipe(
         tap(response => {
@@ -51,15 +51,15 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   }
-  
+
   getUserData(): { correo: string; rol: string } | null {
     const correo = localStorage.getItem('correo');
     const rol = localStorage.getItem('rol');
-    
+
     if (correo && rol) {
       return { correo, rol };
     }
-    
+
     return null;
   }
 }

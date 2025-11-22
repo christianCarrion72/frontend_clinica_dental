@@ -55,7 +55,7 @@ interface HorarioFecha {
   providedIn: 'root'
 })
 export class CitasService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api';
+  private apiUrl = 'http://121.0.0.1:3000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -154,12 +154,12 @@ export class CitasService {
   // Normalizar fecha a formato YYYY-MM-DD
   private normalizarFecha(fecha: any): string {
     if (!fecha) return '';
-    
+
     // Si es un string en formato ISO (2025-10-17 o 2025-10-17T00:00:00)
     if (typeof fecha === 'string') {
       return fecha.split('T')[0]; // Extrae solo la parte de la fecha
     }
-    
+
     // Si es un objeto Date
     if (fecha instanceof Date) {
       const year = fecha.getFullYear();
@@ -167,7 +167,7 @@ export class CitasService {
       const day = String(fecha.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
-    
+
     return '';
   }
 }

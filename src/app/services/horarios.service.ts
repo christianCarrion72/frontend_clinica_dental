@@ -70,7 +70,7 @@ interface ResultadoGeneracion {
   providedIn: 'root'
 })
 export class HorariosService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api';
+  private apiUrl = 'http://121.0.0.1:3000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -158,32 +158,32 @@ export class HorariosService {
   async getDentistaIdFromUserId(userId: number): Promise<number> {
     try {
       console.log(`[Service] Llamando a: ${this.apiUrl}/users/dentistUser/${userId}`);
-      
+
       const response = await this.http.get<number>(
-        `${this.apiUrl}/users/dentistUser/${userId}`, 
+        `${this.apiUrl}/users/dentistUser/${userId}`,
         { headers: this.getHeaders() }
       ).toPromise();
-      
+
       console.log('[Service] Respuesta recibida:', response);
       console.log('[Service] Tipo de respuesta:', typeof response);
-      
+
       // Convertir la respuesta a número si viene como string
       const dentistaId = typeof response === 'string' ? parseInt(response, 10) : response;
-      
+
       console.log('[Service] ID convertido:', dentistaId);
-      
+
       if (dentistaId === null || dentistaId === undefined || isNaN(dentistaId)) {
         throw new Error('No se recibió un ID válido del servidor');
       }
-      
+
       if (dentistaId <= 0) {
         throw new Error('El ID del dentista debe ser mayor a 0');
       }
-      
+
       return dentistaId;
     } catch (error: any) {
       console.error('[Service] Error en getDentistaIdFromUserId:', error);
-      
+
       // Manejar diferentes tipos de errores
       if (error.status === 404) {
         throw new Error('El usuario no es un dentista o no existe');
@@ -363,18 +363,18 @@ export class HorariosService {
    */
   normalizarFecha(fecha: any): string {
     if (!fecha) return '';
-    
+
     if (typeof fecha === 'string') {
       return fecha.split('T')[0];
     }
-    
+
     if (fecha instanceof Date) {
       const year = fecha.getFullYear();
       const month = String(fecha.getMonth() + 1).padStart(2, '0');
       const day = String(fecha.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
-    
+
     return '';
   }
 
@@ -388,7 +388,7 @@ export class HorariosService {
     horariosFechas: HorarioFecha[]
   ): boolean {
     const fechaNormalizada = this.normalizarFecha(fecha);
-    
+
     return horariosFechas.some(hf => {
       const hfFecha = this.normalizarFecha(hf.fecha);
       return hfFecha === fechaNormalizada &&
@@ -401,7 +401,7 @@ export class HorariosService {
    * Filtra horarios disponibles por dentista
    */
   getHorariosPorDentista(dentistaId: number, horariosFechas: HorarioFecha[]): HorarioFecha[] {
-    return horariosFechas.filter(hf => 
+    return horariosFechas.filter(hf =>
       hf.dentista.id === dentistaId && hf.disponible
     );
   }
@@ -411,7 +411,7 @@ export class HorariosService {
    */
   agruparPorDentista(horariosFechas: HorarioFecha[]): Map<number, HorarioFecha[]> {
     const grupos = new Map<number, HorarioFecha[]>();
-    
+
     horariosFechas.forEach(hf => {
       const dentistaId = hf.dentista.id;
       if (!grupos.has(dentistaId)) {
@@ -419,7 +419,7 @@ export class HorariosService {
       }
       grupos.get(dentistaId)!.push(hf);
     });
-    
+
     return grupos;
   }
 
@@ -433,12 +433,12 @@ export class HorariosService {
     porDentista: Map<string, number>;
   } {
     const fechaNormalizada = this.normalizarFecha(fecha);
-    const horariosDelDia = horariosFechas.filter(hf => 
+    const horariosDelDia = horariosFechas.filter(hf =>
       this.normalizarFecha(hf.fecha) === fechaNormalizada
     );
 
     const porDentista = new Map<string, number>();
-    
+
     horariosDelDia.forEach(hf => {
       const nombreDentista = hf.dentista.nombre || `Dentista ${hf.dentista.id}`;
       porDentista.set(nombreDentista, (porDentista.get(nombreDentista) || 0) + 1);

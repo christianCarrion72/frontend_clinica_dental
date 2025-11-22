@@ -14,9 +14,9 @@ export interface User {
     nombre: string;
     descripcion: string;
   };
-  especialidad?: string; 
-  area?: string; 
-  cargo?: string; 
+  especialidad?: string;
+  area?: string;
+  cargo?: string;
 }
 
 export interface CreateUserDto {
@@ -26,7 +26,7 @@ export interface CreateUserDto {
   telefono: string;
   direccion: string;
   estado?: boolean;
-  especialidad?: string; 
+  especialidad?: string;
   area?: string;
   cargo?: string;
 }
@@ -38,7 +38,7 @@ export interface UpdateUserDto {
   telefono?: string;
   direccion?: string;
   estado?: boolean;
-  especialidad?: string; 
+  especialidad?: string;
   area?: string;
   cargo?: string;
 }
@@ -47,10 +47,10 @@ export interface UpdateUserDto {
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/users';
+  private apiUrl = 'http://localhost:3000/api/users';
 
   constructor(private http: HttpClient) { }
-  
+
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -79,7 +79,7 @@ export class UserService {
     return this.http.post<User>(`${this.apiUrl}/dentist`, backendData, { headers: this.getHeaders() });
   }
 
-  
+
   updateDentist(id: number, updateUserDto: UpdateUserDto): Observable<User> {
     const backendData = {
       ...(updateUserDto.nombre && { nombre: updateUserDto.nombre }),

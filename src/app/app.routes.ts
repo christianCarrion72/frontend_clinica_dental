@@ -18,7 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'pacientes',
-    loadChildren: () => import('./pages/pacientes/pacientes.module').then(m => m.PacientesModule),
+    loadComponent: () => import('./pages/pacientes/pacientes.component').then(m => m.PacientesComponent),
     canActivate: [authGuard]
   },
   {

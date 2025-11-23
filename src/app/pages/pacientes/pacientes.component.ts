@@ -6,6 +6,7 @@ import { FamiliarService } from '../../services/familiar.service';
 import { CreatePacienteDto, Paciente, CreateFamiliarDto } from '../../services/paciente.service';
 import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface FamiliarForm {
   nombre: string;
@@ -33,7 +34,8 @@ export class PacientesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private pacienteService: PacienteService,
     private familiarService: FamiliarService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.initForm();
   }
@@ -282,5 +284,9 @@ export class PacientesComponent implements OnInit {
     while (this.familiares.length) {
       this.familiares.removeAt(0);
     }
+  }
+
+  goToDetail(paciente: Paciente) {
+    this.router.navigate(['/paciente-detail', paciente.id]);
   }
 }

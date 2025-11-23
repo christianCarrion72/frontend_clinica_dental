@@ -1,0 +1,87 @@
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Odontograma } from './entities/odontograma.entity';
+import { Paciente } from 'src/pacientes/entities/paciente.entity';
+import { CreateOdontogramaDto } from './dto/create-odontograma.dto';
+import { UpdateOdontogramaDto } from './dto/update-odontograma.dto';
+
+@Injectable()
+export class OdontogramaService {
+  constructor(
+    @InjectRepository(Odontograma)
+    private readonly odontogramaRepository: Repository<Odontograma>,
+    @InjectRepository(Paciente)
+    private readonly pacienteRepository: Repository<Paciente>,
+  ) {}
+
+  async create(
+    createOdontogramaDto: CreateOdontogramaDto,
+  ): Promise<Odontograma> {
+    const paciente = await this.pacienteRepository.findOneBy({
+      id: createOdontogramaDto.pacienteId,
+    });
+    if (!paciente) throw new BadRequestException('Paciente no encontrado');
+
+    const odontograma = this.odontogramaRepository.create({
+      json: createOdontogramaDto.json,
+      paciente,
+    });
+
+    return await this.odontogramaRepository.save(odontograma);
+  }
+
+  async findAll(): Promise<Odontograma[]> {
+    return await this.odontogramaRepository.find({
+      relations: ['paciente', 'odontrograma_versions'],
+      order: { id: 'ASC' },
+    });
+  }
+
+  async findOne(id: number): Promise<Odontograma> {
+    const odontograma = await this.odontogramaRepository.findOne({
+      where: { id },
+      relations: ['paciente', 'odontrograma_versions'],
+    });
+    if (!odontograma)
+      throw new NotFoundException(`Odontograma con ID ${id} no encontrado`);
+    return odontograma;
+  }
+
+  async update(
+    id: number,
+    updateOdontogramaDto: UpdateOdontogramaDto,
+  ): Promise<Odontograma> {
+    const odontograma = await this.odontogramaRepository.findOne({
+      where: { id },
+      relations: ['paciente', 'odontrograma_versions'],
+    });
+    if (!odontograma)
+      throw new NotFoundException(`Odontograma con ID ${id} no encontrado`);
+
+    if (updateOdontogramaDto.json !== undefined) {
+      odontograma.json = updateOdontogramaDto.json;
+    }
+
+    if (updateOdontogramaDto.pacienteId !== undefined) {
+      const paciente = await this.pacienteRepository.findOneBy({
+        id: updateOdontogramaDto.pacienteId,
+      });
+      if (!paciente) throw new BadRequestException('Paciente no encontrado');
+      odontograma.paciente = paciente;
+    }
+
+    return await this.odontogramaRepository.save(odontograma);
+  }
+
+  async remove(id: number): Promise<void> {
+    const odontograma = await this.odontogramaRepository.findOneBy({ id });
+    if (!odontograma)
+      throw new NotFoundException(`Odontograma con ID ${id} no encontrado`);
+    await this.odontogramaRepository.softDelete(odontograma);
+  }
+}

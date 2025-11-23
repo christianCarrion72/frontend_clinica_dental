@@ -41,6 +41,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent)
   },
   {
+    path: 'paciente-detail/:id',
+    loadComponent: () => import('./pages/paciente-detail/paciente-detail.component').then(m => m.PacienteDetailComponent)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

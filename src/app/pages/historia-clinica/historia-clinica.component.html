@@ -1,0 +1,1265 @@
+<div class="min-h-screen bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center space-x-2 text-sm mb-4">
+          <button (click)="navigateToDashboard()"
+                  class="flex items-center text-gray-500 hover:text-gray-700 transition-colors">
+            <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Inicio
+          </button>
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          <button (click)="navigateToPacientes()"
+                  class="text-gray-500 hover:text-gray-700 transition-colors">
+            Pacientes
+          </button>
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          <span class="text-gray-900 font-medium">Historia Clínica</span>
+        </nav>
+
+        <!-- Header con información del paciente -->
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+              <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h1 class="text-2xl font-bold text-gray-900">Historia Clínica</h1>
+              <p class="text-sm text-gray-600 mt-0.5" *ngIf="pacienteName">
+                <span class="font-medium">Paciente:</span> {{ pacienteName }}
+                <span class="text-gray-400 mx-2">|</span>
+                <span class="font-medium">ID:</span> {{ pacienteId }}
+              </p>
+            </div>
+          </div>
+          <div class="flex space-x-3">
+            <button (click)="goBack()"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+              </svg>
+              Volver
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+
+        <!-- Tabs Navigation -->
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+            <button
+              (click)="setActiveTab('historia-clinica')"
+              class="tab-button"
+              [class]="activeTab === 'historia-clinica' ?
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' :
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+            >
+              Historia Clínica
+            </button>
+            <button
+              (click)="setActiveTab('historial-medico')"
+              class="tab-button"
+              [class]="activeTab === 'historial-medico' ?
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' :
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+            >
+              Historial Médico
+            </button>
+            <button
+              (click)="setActiveTab('plan-tratamiento')"
+              class="tab-button"
+              [class]="activeTab === 'plan-tratamiento' ?
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' :
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+            >
+              Plan de Tratamiento
+            </button>
+            <button
+              (click)="setActiveTab('trabajo-realizado')"
+              class="tab-button"
+              [class]="activeTab === 'trabajo-realizado' ?
+                'border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm' :
+                'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'"
+            >
+              Procedimientos
+            </button>
+          </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6">
+
+          <!-- Historia Clínica Tab -->
+          <div *ngIf="activeTab === 'historia-clinica'" class="tab-content space-y-6">
+
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+              <svg class="animate-spin h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span class="ml-3 text-gray-600">Cargando historia clínica...</span>
+            </div>
+
+            <!-- Mostrar Historia Clínica Existente -->
+            <div *ngIf="hasHistoriaClinica && !isLoading && historiaClinica && !showForm" class="space-y-4">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Historia Clínica</h3>
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Registrada
+                  </span>
+                  <button (click)="editHistoriaClinica()"
+                          class="inline-flex items-center px-3 py-1.5 border border-blue-500 rounded-md shadow-sm text-xs font-medium text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Editar
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Fecha de Ingreso</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historiaClinica.fechaIngreso | date: 'dd/MM/yyyy' }}</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">ID Historia</label>
+                  <p class="mt-1 text-sm text-gray-900">#{{ historiaClinica.id }}</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg p-4 md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Motivo de Consulta</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historiaClinica.motivoConsulta }}</p>
+                </div>
+
+                <div *ngIf="historiaClinica.examenBucal && historiaClinica.examenBucal.length > 0"
+                     class="bg-white border border-gray-200 rounded-lg p-4 md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase mb-2 block">Examen Bucal</label>
+                  <div class="flex flex-wrap gap-2">
+                    <span *ngFor="let examen of historiaClinica.examenBucal"
+                          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {{ examen }}
+                    </span>
+                  </div>
+                </div>
+
+                <div *ngIf="historiaClinica.dentistas && historiaClinica.dentistas.length > 0"
+                     class="bg-white border border-gray-200 rounded-lg p-4 md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase mb-2 block">Dentistas</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let dentista of historiaClinica.dentistas" class="flex items-center">
+                      <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                      </svg>
+                      <span class="text-sm text-gray-900">{{ dentista.nombre || dentista.user?.nombre || 'Dentista' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulario de Creación/Edición -->
+            <div *ngIf="showForm && !isLoading && activeTab === 'historia-clinica'" class="space-y-4">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">{{ isEditingHistoriaClinica ? 'Editar Historia Clínica' : 'Crear Historia Clínica' }}</h3>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                      [class.bg-yellow-100]="!isEditingHistoriaClinica"
+                      [class.text-yellow-800]="!isEditingHistoriaClinica"
+                      [class.bg-blue-100]="isEditingHistoriaClinica"
+                      [class.text-blue-800]="isEditingHistoriaClinica">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path *ngIf="!isEditingHistoriaClinica" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    <path *ngIf="isEditingHistoriaClinica" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Pendiente
+                </span>
+              </div>
+
+              <form [formGroup]="historiaClinicaForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-lg space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Fecha de Ingreso -->
+                    <div>
+                      <label for="fechaIngreso" class="block text-sm font-medium text-gray-700 mb-1">
+                        Fecha de Ingreso *
+                      </label>
+                      <input type="date" id="fechaIngreso" formControlName="fechaIngreso"
+                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                             [class.border-red-500]="historiaClinicaForm.get('fechaIngreso')?.invalid && historiaClinicaForm.get('fechaIngreso')?.touched">
+                      <p *ngIf="historiaClinicaForm.get('fechaIngreso')?.invalid && historiaClinicaForm.get('fechaIngreso')?.touched"
+                         class="mt-1 text-xs text-red-600">
+                        La fecha es requerida
+                      </p>
+                    </div>
+
+                    <!-- Paciente (autocompletado) -->
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Paciente</label>
+                      <input type="text" [value]="pacienteName || 'Paciente #' + pacienteId" readonly
+                             class="w-full px-3 py-2 border border-gray-300 bg-gray-100 rounded-md shadow-sm">
+                    </div>
+                  </div>
+
+                  <!-- Motivo de Consulta -->
+                  <div>
+                    <label for="motivoConsulta" class="block text-sm font-medium text-gray-700 mb-1">
+                      Motivo de Consulta *
+                    </label>
+                    <textarea id="motivoConsulta" formControlName="motivoConsulta" rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              [class.border-red-500]="historiaClinicaForm.get('motivoConsulta')?.invalid && historiaClinicaForm.get('motivoConsulta')?.touched"
+                              placeholder="Describa el motivo de la consulta del paciente..."></textarea>
+                    <p *ngIf="historiaClinicaForm.get('motivoConsulta')?.invalid && historiaClinicaForm.get('motivoConsulta')?.touched"
+                       class="mt-1 text-xs text-red-600">
+                      El motivo de consulta es requerido (mínimo 10 caracteres)
+                    </p>
+                  </div>
+
+                  <!-- Examen Bucal -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Examen Bucal <span class="text-xs text-gray-500">(Seleccione las opciones que apliquen)</span>
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                      <label *ngFor="let opcion of examenBucalOptions"
+                             class="flex items-center p-2 border rounded-md cursor-pointer transition-colors hover:bg-blue-50"
+                             [class.bg-blue-100]="isExamenBucalSelected(opcion)"
+                             [class.border-blue-500]="isExamenBucalSelected(opcion)"
+                             [class.border-gray-300]="!isExamenBucalSelected(opcion)">
+                        <input type="checkbox"
+                               [checked]="isExamenBucalSelected(opcion)"
+                               (change)="toggleExamenBucal(opcion)"
+                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <span class="ml-2 text-sm text-gray-700">{{ opcion }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-between">
+                  <button *ngIf="isEditingHistoriaClinica" type="button" (click)="cancelEdit()"
+                          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Cancelar
+                  </button>
+                  <div class="flex-1"></div>
+                  <div class="flex space-x-3">
+                    <button *ngIf="isEditingHistoriaClinica" type="button" (click)="updateHistoriaClinica()" [disabled]="!historiaClinicaForm.valid || isLoading"
+                            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                      <svg *ngIf="!isLoading" class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <svg *ngIf="isLoading" class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
+                    </button>
+                    <button *ngIf="!isEditingHistoriaClinica" type="button" (click)="nextToHistorialMedico()"
+                            class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                      Siguiente: Historial Médico
+                      <svg class="h-5 w-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Historial Médico Tab -->
+          <div *ngIf="activeTab === 'historial-medico'" class="tab-content space-y-6">
+
+            <!-- Mostrar Historial Médico si existe -->
+            <div *ngIf="hasHistoriaClinica && historialMedico && !showForm" class="space-y-4">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Historial Médico</h3>
+                <button (click)="editHistorialMedico()"
+                        class="inline-flex items-center px-3 py-1.5 border border-blue-500 rounded-md shadow-sm text-xs font-medium text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Editar
+                </button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Alergias</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historialMedico.alergia ? 'Sí' : 'No' }}</p>
+                  <p *ngIf="historialMedico.alergia && historialMedico.nombreAlergias" class="mt-1 text-xs text-gray-600">{{ historialMedico.nombreAlergias }}</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Fuma</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historialMedico.fuma ? 'Sí' : 'No' }}</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Tratamiento Activo</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historialMedico.tratamientoActivo ? 'Sí' : 'No' }}</p>
+                  <p *ngIf="historialMedico.tratamientoActivo && historialMedico.nombreTratamiento" class="mt-1 text-xs text-gray-600">{{ historialMedico.nombreTratamiento }}</p>
+                </div>
+                <div *ngIf="historialMedico.ultimaConsulta" class="bg-white border border-gray-200 rounded-lg p-4">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Última Consulta</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historialMedico.ultimaConsulta | date: 'dd/MM/yyyy' }}</p>
+                </div>
+                <div *ngIf="historialMedico.enfermedades && historialMedico.enfermedades.length > 0" class="bg-white border border-gray-200 rounded-lg p-4 md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase mb-2 block">Enfermedades</label>
+                  <div class="flex flex-wrap gap-2">
+                    <span *ngFor="let enfermedad of historialMedico.enfermedades" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ enfermedad }}</span>
+                  </div>
+                </div>
+                <div *ngIf="historialMedico.otrasEnfermedades" class="bg-white border border-gray-200 rounded-lg p-4 md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase">Otras Enfermedades</label>
+                  <p class="mt-1 text-sm text-gray-900">{{ historialMedico.otrasEnfermedades }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulario Historial Médico -->
+            <div *ngIf="showForm" class="space-y-4">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">{{ isEditingHistorialMedico ? 'Editar Historial Médico' : 'Historial Médico del Paciente' }}</h3>
+                <span *ngIf="!isEditingHistorialMedico" class="text-xs text-gray-500">Paso 2 de 2</span>
+                <span *ngIf="isEditingHistorialMedico" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Modo Edición
+                </span>
+              </div>
+
+              <form [formGroup]="historialMedicoForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-lg space-y-4">
+
+                  <!-- Switches y Campos Booleanos -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Alergia -->
+                    <div class="space-y-2">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium text-gray-700">¿Tiene alergias? *</label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" formControlName="alergia" class="sr-only peer">
+                          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                      </div>
+                      <input *ngIf="historialMedicoForm.get('alergia')?.value"
+                             type="text" formControlName="nombreAlergias"
+                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                             [class.border-red-500]="historialMedicoForm.get('nombreAlergias')?.invalid && historialMedicoForm.get('nombreAlergias')?.touched"
+                             placeholder="Especifique las alergias">
+                      <p *ngIf="historialMedicoForm.get('alergia')?.value && historialMedicoForm.get('nombreAlergias')?.invalid && historialMedicoForm.get('nombreAlergias')?.touched"
+                         class="text-xs text-red-600">
+                        Debe especificar las alergias
+                      </p>
+                    </div>
+
+                    <!-- Fuma -->
+                    <div class="flex items-center justify-between">
+                      <label class="text-sm font-medium text-gray-700">¿Fuma? *</label>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" formControlName="fuma" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+
+                    <!-- Tratamiento Activo -->
+                    <div class="space-y-2">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-medium text-gray-700">¿Tratamiento activo? *</label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                          <input type="checkbox" formControlName="tratamientoActivo" class="sr-only peer">
+                          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                      </div>
+                      <input *ngIf="historialMedicoForm.get('tratamientoActivo')?.value"
+                             type="text" formControlName="nombreTratamiento"
+                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                             [class.border-red-500]="historialMedicoForm.get('nombreTratamiento')?.invalid && historialMedicoForm.get('nombreTratamiento')?.touched"
+                             placeholder="Especifique el tratamiento">
+                      <p *ngIf="historialMedicoForm.get('tratamientoActivo')?.value && historialMedicoForm.get('nombreTratamiento')?.invalid && historialMedicoForm.get('nombreTratamiento')?.touched"
+                         class="text-xs text-red-600">
+                        Debe especificar el tratamiento
+                      </p>
+                    </div>
+
+                    <!-- Última Consulta -->
+                    <div>
+                      <label for="ultimaConsulta" class="block text-sm font-medium text-gray-700 mb-1">Última Consulta</label>
+                      <input type="date" id="ultimaConsulta" formControlName="ultimaConsulta"
+                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                  </div>
+
+                  <!-- Enfermedades -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Enfermedades <span class="text-xs text-gray-500">(Seleccione las que apliquen)</span>
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                      <label *ngFor="let enfermedad of enfermedadesOptions"
+                             class="flex items-center p-2 border rounded-md cursor-pointer transition-colors hover:bg-red-50"
+                             [class.bg-red-100]="isEnfermedadSelected(enfermedad)"
+                             [class.border-red-500]="isEnfermedadSelected(enfermedad)"
+                             [class.border-gray-300]="!isEnfermedadSelected(enfermedad)">
+                        <input type="checkbox"
+                               [checked]="isEnfermedadSelected(enfermedad)"
+                               (change)="toggleEnfermedad(enfermedad)"
+                               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                        <span class="ml-2 text-sm text-gray-700">{{ enfermedad }}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Otras Enfermedades -->
+                  <div>
+                    <label for="otrasEnfermedades" class="block text-sm font-medium text-gray-700 mb-1">
+                      Otras Enfermedades <span class="text-xs text-gray-500">(opcional)</span>
+                    </label>
+                    <textarea id="otrasEnfermedades" formControlName="otrasEnfermedades" rows="3"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="Describa otras enfermedades no mencionadas..."></textarea>
+                  </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex justify-between">
+                  <button *ngIf="!isEditingHistorialMedico" type="button" (click)="backToHistoriaClinica()"
+                          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Atrás
+                  </button>
+                  <div class="flex-1"></div>
+                  <div class="flex space-x-3">
+                    <button type="button" (click)="isEditingHistorialMedico ? cancelEdit() : cancelForm()"
+                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                      <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                      Cancelar
+                    </button>
+                    <button type="submit" [disabled]="!historialMedicoForm.valid || isLoading"
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                      <svg *ngIf="!isLoading" class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <svg *ngIf="isLoading" class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ isLoading ? (isEditingHistorialMedico ? 'Actualizando...' : 'Creando...') : (isEditingHistorialMedico ? 'Actualizar' : 'Crear Historia Completa') }}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Plan de Tratamiento Tab -->
+          <div *ngIf="activeTab === 'plan-tratamiento'" class="tab-content space-y-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800">Plan de Tratamiento</h3>
+              <div class="flex space-x-2">
+                <!-- Botón de grabación de voz -->
+                <button *ngIf="hasHistoriaClinica && !isAddingPlan" (click)="openAudioModal()"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                        title="Grabar análisis de voz">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                  </svg>
+                </button>
+                <!-- Botón agregar manual -->
+                <button *ngIf="hasHistoriaClinica && !isAddingPlan" (click)="startAddingPlan()"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mensaje si no hay historia clínica -->
+            <div *ngIf="!hasHistoriaClinica" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div class="flex">
+                <svg class="h-5 w-5 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <p class="text-sm text-yellow-700">Debe crear primero la Historia Clínica para poder agregar planes de tratamiento.</p>
+              </div>
+            </div>
+
+            <!-- Tabla de Planes de Tratamiento -->
+            <div *ngIf="hasHistoriaClinica" class="overflow-x-auto bg-white rounded-lg shadow">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Diagnóstico
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Estado
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Fecha
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Pieza
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Precio
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <!-- Fila de agregar nuevo plan -->
+                  <tr *ngIf="isAddingPlan" class="bg-blue-50">
+                    <td class="px-6 py-4">
+                      <input type="text" [(ngModel)]="newPlanTratamiento.diagnosticoTratamiento"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                             placeholder="Ingrese diagnóstico">
+                    </td>
+                    <td class="px-6 py-4">
+                      <select [(ngModel)]="newPlanTratamiento.estado"
+                              class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completado</option>
+                        <option value="Cancelado">Cancelado</option>
+                      </select>
+                    </td>
+                    <td class="px-6 py-4">
+                      <input type="date" [(ngModel)]="newPlanTratamiento.fecha"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </td>
+                    <td class="px-6 py-4">
+                      <input type="text" [(ngModel)]="newPlanTratamiento.pieza"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                             placeholder="Ej: Pieza 12">
+                    </td>
+                    <td class="px-6 py-4">
+                      <input type="number" [(ngModel)]="newPlanTratamiento.precio" min="0" step="0.01"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                             placeholder="0.00">
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                      <button (click)="savePlanTratamiento()"
+                              class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Guardar
+                      </button>
+                      <button (click)="cancelAddingPlan()"
+                              class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Cancelar
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Filas existentes -->
+                  <tr *ngFor="let plan of planesTratamiento" class="hover:bg-gray-50">
+                    <!-- Modo edición -->
+                    <ng-container *ngIf="editingPlanId === plan.id">
+                      <td class="px-6 py-4">
+                        <input type="text" [(ngModel)]="plan.diagnosticoTratamiento"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4">
+                        <select [(ngModel)]="plan.estado"
+                                class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="En Proceso">En Proceso</option>
+                          <option value="Completado">Completado</option>
+                          <option value="Cancelado">Cancelado</option>
+                        </select>
+                      </td>
+                      <td class="px-6 py-4">
+                        <input type="date" [(ngModel)]="plan.fecha"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4">
+                        <input type="text" [(ngModel)]="plan.pieza"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4">
+                        <input type="number" [(ngModel)]="plan.precio" min="0" step="0.01"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4 text-right space-x-2">
+                        <button (click)="updatePlan(plan)"
+                                class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        </button>
+                        <button (click)="cancelEditPlan()"
+                                class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <!-- Modo visualización -->
+                    <ng-container *ngIf="editingPlanId !== plan.id">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ plan.diagnosticoTratamiento }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                              [class.bg-yellow-100]="plan.estado === 'Pendiente'"
+                              [class.text-yellow-800]="plan.estado === 'Pendiente'"
+                              [class.bg-blue-100]="plan.estado === 'En Proceso'"
+                              [class.text-blue-800]="plan.estado === 'En Proceso'"
+                              [class.bg-green-100]="plan.estado === 'Completado'"
+                              [class.text-green-800]="plan.estado === 'Completado'"
+                              [class.bg-red-100]="plan.estado === 'Cancelado'"
+                              [class.text-red-800]="plan.estado === 'Cancelado'">
+                          {{ plan.estado }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ plan.fecha | date: 'dd/MM/yyyy' }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ plan.pieza }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${{ plan.precio | number: '1.2-2' }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                        <button (click)="editPlan(plan)"
+                                class="text-blue-600 hover:text-blue-900">
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                          </svg>
+                        </button>
+                        <button (click)="deletePlan(plan.id)"
+                                class="text-red-600 hover:text-red-900">
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </ng-container>
+                  </tr>
+
+                  <!-- Mensaje si no hay planes -->
+                  <tr *ngIf="planesTratamiento.length === 0 && !isAddingPlan">
+                    <td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">
+                      <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                      No hay planes de tratamiento registrados. Haga clic en el botón + para agregar uno.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Total -->
+              <div *ngIf="planesTratamiento.length > 0" class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div class="flex justify-end items-center">
+                  <span class="text-sm font-medium text-gray-700 mr-4">Total:</span>
+                  <span class="text-lg font-bold text-gray-900">${{ calcularTotal() | number: '1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Procedimientos Tab -->
+          <div *ngIf="activeTab === 'trabajo-realizado'" class="tab-content space-y-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800">Trabajos Realizados</h3>
+              <button *ngIf="hasHistoriaClinica && planesTratamiento.length > 0 && !isAddingProcedimiento" (click)="startAddingProcedimiento()"
+                      class="inline-flex items-center px-3 py-2 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Mensaje si no hay historia clínica -->
+            <div *ngIf="!hasHistoriaClinica" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div class="flex">
+                <svg class="h-5 w-5 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <p class="text-sm text-yellow-700">Debe crear primero la Historia Clínica y al menos un Plan de Tratamiento para registrar trabajos realizados.</p>
+              </div>
+            </div>
+
+            <!-- Mensaje si no hay planes de tratamiento -->
+            <div *ngIf="hasHistoriaClinica && planesTratamiento.length === 0" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div class="flex">
+                <svg class="h-5 w-5 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <p class="text-sm text-yellow-700">Debe crear al menos un Plan de Tratamiento antes de registrar trabajos realizados.</p>
+              </div>
+            </div>
+
+            <!-- Tabla de Procedimientos -->
+            <div *ngIf="hasHistoriaClinica && planesTratamiento.length > 0" class="overflow-x-auto bg-white rounded-lg shadow">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Fecha
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Procedimientos
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Plan de Tratamiento
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Próxima Cita
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <!-- Fila de agregar nuevo procedimiento -->
+                  <tr *ngIf="isAddingProcedimiento" class="bg-blue-50">
+                    <td class="px-6 py-4">
+                      <input type="date" [(ngModel)]="newProcedimiento.fecha"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </td>
+                    <td class="px-6 py-4">
+                      <textarea [(ngModel)]="newProcedimiento.trabajoRealizado" rows="2"
+                                class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Describa el trabajo realizado"></textarea>
+                    </td>
+                    <td class="px-6 py-4">
+                      <select [(ngModel)]="newProcedimiento.planTratamientoId"
+                              class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option *ngFor="let plan of planesTratamiento" [value]="plan.id">
+                          {{ plan.diagnosticoTratamiento }} - {{ plan.pieza }}
+                        </option>
+                      </select>
+                    </td>
+                    <td class="px-6 py-4">
+                      <input type="date" [(ngModel)]="newProcedimiento.proximaCita"
+                             class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                      <button (click)="saveProcedimiento()"
+                              class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Guardar
+                      </button>
+                      <button (click)="cancelAddingProcedimiento()"
+                              class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Cancelar
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Filas existentes -->
+                  <tr *ngFor="let procedimiento of procedimientos" class="hover:bg-gray-50">
+                    <!-- Modo edición -->
+                    <ng-container *ngIf="editingProcedimientoId === procedimiento.id">
+                      <td class="px-6 py-4">
+                        <input type="date" [(ngModel)]="procedimiento.fecha"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4">
+                        <textarea [(ngModel)]="procedimiento.trabajoRealizado" rows="2"
+                                  class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                      </td>
+                      <td class="px-6 py-4">
+                        <select [(ngModel)]="procedimiento.planTratamiento.id"
+                                class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                          <option *ngFor="let plan of planesTratamiento" [value]="plan.id">
+                            {{ plan.diagnosticoTratamiento }} - {{ plan.pieza }}
+                          </option>
+                        </select>
+                      </td>
+                      <td class="px-6 py-4">
+                        <input type="date" [(ngModel)]="procedimiento.proximaCita"
+                               class="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      </td>
+                      <td class="px-6 py-4 text-right space-x-2">
+                        <button (click)="updateProcedimiento(procedimiento)"
+                                class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        </button>
+                        <button (click)="cancelEditProcedimiento()"
+                                class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <!-- Modo visualización -->
+                    <ng-container *ngIf="editingProcedimientoId !== procedimiento.id">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ procedimiento.fecha | date: 'dd/MM/yyyy' }}
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        {{ procedimiento.trabajoRealizado }}
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-900">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {{ getPlanTratamientoNombre(procedimiento.planTratamiento) }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span *ngIf="procedimiento.proximaCita" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                          </svg>
+                          {{ procedimiento.proximaCita | date: 'dd/MM/yyyy' }}
+                        </span>
+                        <span *ngIf="!procedimiento.proximaCita" class="text-gray-400">Sin cita</span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                        <button (click)="editProcedimiento(procedimiento)"
+                                class="text-blue-600 hover:text-blue-900">
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                          </svg>
+                        </button>
+                        <button (click)="deleteProcedimiento(procedimiento.id)"
+                                class="text-red-600 hover:text-red-900">
+                          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </ng-container>
+                  </tr>
+
+                  <!-- Mensaje si no hay procedimientos -->
+                  <tr *ngIf="procedimientos.length === 0 && !isAddingProcedimiento">
+                    <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
+                      <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                      </svg>
+                      No hay trabajos realizados registrados. Haga clic en el botón + para agregar uno.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- Modal de grabación de voz y análisis IA -->
+<div *ngIf="showAudioModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+    <div class="mt-3">
+      <!-- Header del modal -->
+      <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+          <svg class="h-6 w-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+          </svg>
+          Análisis de Voz con IA
+        </h3>
+        <button (click)="closeAudioModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenido del modal -->
+      <div class="mt-6">
+        <!-- Estado de grabación -->
+        <div *ngIf="!showAnalysisPreview" class="text-center py-8">
+          <div class="mb-6">
+            <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full" 
+                 [ngClass]="isRecording ? 'bg-red-100' : (isSendingAudio ? 'bg-orange-100' : (isAnalyzing ? 'bg-blue-100' : 'bg-green-100'))">
+              <svg *ngIf="!isRecording && !isSendingAudio && !isAnalyzing" class="h-12 w-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+              </svg>
+              <div *ngIf="isRecording" class="h-12 w-12 bg-red-500 rounded-full animate-pulse flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div *ngIf="isSendingAudio" class="h-12 w-12 bg-orange-500 rounded-full flex items-center justify-center">
+                <svg class="h-6 w-6 text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                </svg>
+              </div>
+              <div *ngIf="isAnalyzing" class="h-12 w-12 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg class="h-6 w-6 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="text-xl font-semibold text-gray-900 mb-2">
+            {{ isRecording ? 'Grabando...' : (isSendingAudio ? 'Enviando audio...' : (isAnalyzing ? 'Analizando con IA...' : 'Listo para grabar')) }}
+          </h4>
+          
+          <p class="text-gray-600 mb-6">
+            {{ isRecording ? 'Describe el plan de tratamiento y los procedimientos realizados' : 
+               (isAnalyzing ? 'Nuestro sistema de IA está procesando tu audio y generando el plan de tratamiento...' : 
+                'Haz clic en el botón para comenzar a grabar tu diagnóstico') }}
+          </p>
+
+          <!-- Controles de grabación -->
+          <div class="flex justify-center space-x-4">
+            <button *ngIf="!isRecording && !isAnalyzing" (click)="startRecording()"
+                    class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+              </svg>
+              Iniciar Grabación
+            </button>
+
+            <button *ngIf="isRecording" (click)="stopRecording()"
+                    class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-sm text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Detener Grabación
+            </button>
+          </div>
+
+          <!-- Indicador de análisis -->
+          <div *ngIf="isAnalyzing" class="mt-6">
+            <div class="flex justify-center">
+              <svg class="animate-spin h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Previsualización de resultados -->
+        <div *ngIf="showAnalysisPreview && audioAnalysisResult" class="space-y-6">
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <svg class="h-6 w-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h4 class="text-lg font-semibold text-green-800">Análisis Completado</h4>
+              </div>
+              <div class="flex space-x-2">
+                <button *ngIf="!isEditingAnalysis"
+                        (click)="enableAnalysisEditing()"
+                        class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-sm rounded transition-colors">
+                  <i class="fas fa-edit mr-1"></i>Editar
+                </button>
+                <div *ngIf="isEditingAnalysis" class="flex space-x-2">
+                  <button (click)="saveAnalysisChanges()"
+                          class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors">
+                    <i class="fas fa-save mr-1"></i>Guardar
+                  </button>
+                  <button (click)="cancelAnalysisEditing()"
+                          class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded transition-colors">
+                    <i class="fas fa-times mr-1"></i>Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="text-green-700 mt-1">La IA ha analizado tu audio y generado el siguiente plan de tratamiento:</p>
+          </div>
+
+          <!-- Información adicional (fecha y próxima cita) -->
+          <div *ngIf="audioAnalysisResult.fecha || audioAnalysisResult.proximaCita" 
+               class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h5 class="text-md font-medium text-blue-900 mb-3">Información Adicional</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div *ngIf="audioAnalysisResult.fecha">
+                <label class="block text-sm font-medium text-blue-700 mb-1">Fecha mencionada:</label>
+                <input *ngIf="isEditingAnalysis; else fechaDisplay"
+                       type="date"
+                       [(ngModel)]="audioAnalysisResult.fecha"
+                       class="w-full px-3 py-2 border border-blue-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <ng-template #fechaDisplay>
+                  <p class="text-sm text-blue-900 font-medium px-3 py-2 bg-white rounded-md border border-blue-200">
+                    {{ audioAnalysisResult.fecha | date:'dd/MM/yyyy' }}
+                  </p>
+                </ng-template>
+              </div>
+              <div *ngIf="audioAnalysisResult.proximaCita">
+                <label class="block text-sm font-medium text-blue-700 mb-1">Próxima cita:</label>
+                <input *ngIf="isEditingAnalysis; else citaDisplay"
+                       type="text"
+                       [(ngModel)]="audioAnalysisResult.proximaCita"
+                       class="w-full px-3 py-2 border border-blue-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="Ej: En 2 días, La próxima semana...">
+                <ng-template #citaDisplay>
+                  <p class="text-sm text-blue-900 font-medium px-3 py-2 bg-white rounded-md border border-blue-200">
+                    {{ audioAnalysisResult.proximaCita }}
+                  </p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Planes de Tratamiento detectados -->
+          <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+              <h5 class="text-md font-medium text-gray-900">Planes de Tratamiento ({{ audioAnalysisResult.planesTratamiento.length }})</h5>
+              <button *ngIf="isEditingAnalysis"
+                      (click)="addNewPlan()"
+                      class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors">
+                <i class="fas fa-plus mr-1"></i>Agregar
+              </button>
+            </div>
+            <div class="divide-y divide-gray-200">
+              <div *ngFor="let plan of audioAnalysisResult.planesTratamiento; let i = index" 
+                   class="px-4 py-4 hover:bg-gray-50">
+                <div class="flex items-start space-x-4">
+                  <div class="flex-shrink-0">
+                    <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                      {{ i + 1 }}
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div *ngIf="isEditingAnalysis" class="flex justify-end mb-2">
+                      <button (click)="removePlan(i)"
+                              class="text-red-600 hover:text-red-800 text-xs">
+                        <i class="fas fa-trash mr-1"></i>Eliminar
+                      </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <!-- Diagnóstico -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Diagnóstico</p>
+                        <textarea *ngIf="isEditingAnalysis; else diagDisplay"
+                                [(ngModel)]="plan.diagnosticoTratamiento"
+                                rows="2"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Diagnóstico del tratamiento"></textarea>
+                        <ng-template #diagDisplay>
+                          <p class="text-sm text-gray-600">{{ plan.diagnosticoTratamiento }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Pieza -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Pieza</p>
+                        <input *ngIf="isEditingAnalysis; else piezaDisplay"
+                               type="text"
+                               [(ngModel)]="plan.pieza"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Número de pieza">
+                        <ng-template #piezaDisplay>
+                          <p class="text-sm text-gray-600">{{ plan.pieza }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Estado -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Estado</p>
+                        <select *ngIf="isEditingAnalysis; else estadoDisplay"
+                                [(ngModel)]="plan.estado"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="En Proceso">En Proceso</option>
+                          <option value="Completado">Completado</option>
+                        </select>
+                        <ng-template #estadoDisplay>
+                          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                [ngClass]="{
+                                  'bg-yellow-100 text-yellow-800': plan.estado === 'Pendiente',
+                                  'bg-blue-100 text-blue-800': plan.estado === 'En Proceso',
+                                  'bg-green-100 text-green-800': plan.estado === 'Completado'
+                                }">
+                            {{ plan.estado }}
+                          </span>
+                        </ng-template>
+                      </div>
+                      <!-- Precio -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Precio</p>
+                        <input *ngIf="isEditingAnalysis; else precioDisplay"
+                               type="number"
+                               [(ngModel)]="plan.precio"
+                               step="0.01"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="0.00">
+                        <ng-template #precioDisplay>
+                          <p class="text-sm text-gray-600">${{ plan.precio }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Fecha -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Fecha</p>
+                        <input *ngIf="isEditingAnalysis; else fechaPlanDisplay"
+                               type="date"
+                               [(ngModel)]="plan.fecha"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <ng-template #fechaPlanDisplay>
+                          <p class="text-sm text-gray-600">{{ plan.fecha | date:'dd/MM/yyyy' }}</p>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Procedimientos detectados -->
+          <div *ngIf="audioAnalysisResult.procedimientos && audioAnalysisResult.procedimientos.length > 0" 
+               class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+              <h5 class="text-md font-medium text-gray-900">Procedimientos ({{ audioAnalysisResult.procedimientos.length }})</h5>
+              <button *ngIf="isEditingAnalysis"
+                      (click)="addNewProcedimiento()"
+                      class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded transition-colors">
+                <i class="fas fa-plus mr-1"></i>Agregar
+              </button>
+            </div>
+            <div class="divide-y divide-gray-200">
+              <div *ngFor="let proc of audioAnalysisResult.procedimientos; let i = index" 
+                   class="px-4 py-4 hover:bg-gray-50">
+                <div class="flex items-start space-x-4">
+                  <div class="flex-shrink-0">
+                    <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-100 text-green-800 text-sm font-medium">
+                      {{ i + 1 }}
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div *ngIf="isEditingAnalysis" class="flex justify-end mb-2">
+                      <button (click)="removeProcedimiento(i)"
+                              class="text-red-600 hover:text-red-800 text-xs">
+                        <i class="fas fa-trash mr-1"></i>Eliminar
+                      </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <!-- Trabajo Realizado -->
+                      <div class="col-span-2">
+                        <p class="text-sm font-medium text-gray-900 mb-1">Trabajo Realizado</p>
+                        <textarea *ngIf="isEditingAnalysis; else trabajoDisplay"
+                                [(ngModel)]="proc.trabajoRealizado"
+                                rows="2"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="Descripción del trabajo realizado"></textarea>
+                        <ng-template #trabajoDisplay>
+                          <p class="text-sm text-gray-600">{{ proc.trabajoRealizado }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Plan Asociado -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Plan Asociado</p>
+                        <select *ngIf="isEditingAnalysis; else planIndexDisplay"
+                                [(ngModel)]="proc.planIndex"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                          <option *ngFor="let plan of audioAnalysisResult.planesTratamiento; let idx = index" 
+                                  [value]="idx">
+                            Plan {{ idx + 1 }} - {{ plan.diagnosticoTratamiento }}
+                          </option>
+                        </select>
+                        <ng-template #planIndexDisplay>
+                          <p class="text-sm text-gray-600">Plan {{ proc.planIndex + 1 }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Fecha del Procedimiento -->
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 mb-1">Fecha</p>
+                        <input *ngIf="isEditingAnalysis; else fechaProcDisplay"
+                               type="date"
+                               [(ngModel)]="proc.fecha"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <ng-template #fechaProcDisplay>
+                          <p *ngIf="proc.fecha" class="text-sm text-gray-600">{{ proc.fecha | date:'dd/MM/yyyy' }}</p>
+                        </ng-template>
+                      </div>
+                      <!-- Próxima Cita del Procedimiento -->
+                      <div class="col-span-2">
+                        <p class="text-sm font-medium text-gray-900 mb-1">Próxima Cita</p>
+                        <input *ngIf="isEditingAnalysis; else proximaCitaDisplay"
+                               type="date"
+                               [(ngModel)]="proc.proximaCita"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <ng-template #proximaCitaDisplay>
+                          <p *ngIf="proc.proximaCita" class="text-sm text-gray-600 flex items-center">
+                            <svg class="h-4 w-4 text-blue-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            {{ proc.proximaCita | date:'dd/MM/yyyy' }}
+                          </p>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones del modal -->
+        <div class="mt-6 flex justify-end space-x-3">
+          <button (click)="closeAudioModal()" [disabled]="isRecording || isAnalyzing" type="button"
+                  class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            Cancelar
+          </button>
+          
+          <button *ngIf="showAnalysisPreview && audioAnalysisResult" 
+                  (click)="applyAudioAnalysis()" [disabled]="isAnalyzing" type="button"
+                  class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg *ngIf="isAnalyzing" class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ isAnalyzing ? 'Guardando...' : 'Guardar en Plan de Tratamiento' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

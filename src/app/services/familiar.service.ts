@@ -7,7 +7,7 @@ import { CreateFamiliarDto, Familiar } from './paciente.service';
   providedIn: 'root'
 })
 export class FamiliarService {
-  private apiUrl = 'http://121.0.0.1:3000/api/familiares';
+  private apiUrl = 'http://127.0.0.1:3000/api/familiares';
 
   constructor(private http: HttpClient) {}
 

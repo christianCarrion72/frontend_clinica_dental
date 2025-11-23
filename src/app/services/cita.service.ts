@@ -55,7 +55,7 @@ interface HorarioFecha {
   providedIn: 'root'
 })
 export class CitasService {
-  private apiUrl = 'http://121.0.0.1:3000/api';
+  private apiUrl = 'http://127.0.0.1:3000/api';
 
   constructor(private http: HttpClient) {}
 

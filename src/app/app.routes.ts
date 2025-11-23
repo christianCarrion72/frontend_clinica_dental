@@ -37,6 +37,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'historia-clinica/:id',
+    loadComponent: () => import('./pages/historia-clinica/historia-clinica.component').then(m => m.HistoriaClinicaComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'welcome',
     loadComponent: () => import('./pages/welcome/welcome.component').then(m => m.WelcomeComponent)
   },

@@ -6,6 +6,7 @@ export interface CreatePacienteDto {
   nombre: string;
   fecha_nacimiento: Date;
   edad?: number;
+  email?: string;
   estado_civil_id: number;
   ocupacion?: string;
   telefono?: string;
@@ -45,7 +46,7 @@ export interface SearchResponse {
   providedIn: 'root'
 })
 export class PacienteService {
-  private apiUrl = 'http://localhost:3000/api/pacientes';
+  private apiUrl = 'http://127.0.0.1:3000/api/pacientes';
 
   constructor(private http: HttpClient) {}
 

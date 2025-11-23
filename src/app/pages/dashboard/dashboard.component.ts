@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class DashboardComponent implements OnInit {
   userEmail: string = '';
   userRole: string = '';
+  userId: number | null = null;
 
   constructor(
     private authService: AuthService,
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit {
     if (userData) {
       this.userEmail = userData.correo || '';
       this.userRole = userData.rol || '';
+      this.userId = userData.id || null;
     } else {
       this.router.navigate(['/login']);
     }

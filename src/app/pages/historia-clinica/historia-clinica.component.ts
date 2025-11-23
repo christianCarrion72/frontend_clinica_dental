@@ -1079,21 +1079,21 @@ export class HistoriaClinicaComponent implements OnInit {
   private processRecording(): void {
     const audioBlob = new Blob(this.audioChunks, { type: 'audio/mp3' });
     const audioFile = new File([audioBlob], 'recording.mp3', { type: 'audio/mp3' });
-    
+
     this.isSendingAudio = true;
     this.toastr.info('Enviando audio para análisis...');
-    
+
     this.analyzeAudio(audioFile);
   }
 
   private analyzeAudio(audioFile: File): void {
     this.isSendingAudio = false;
     this.isAnalyzing = true;
-    
+
     this.aiService.analyzeAudio(audioFile).subscribe({
       next: (result) => {
         console.log('Análisis de audio completado:', result);
-        
+
         // Asegurar que todos los planes tengan fecha de hoy si no la tienen
         const today = new Date().toISOString().split('T')[0];
         result.planesTratamiento.forEach(plan => {
@@ -1101,14 +1101,14 @@ export class HistoriaClinicaComponent implements OnInit {
             plan.fecha = today;
           }
         });
-        
+
         // Asegurar que todos los procedimientos tengan fecha de hoy si no la tienen
         result.procedimientos.forEach(proc => {
           if (!proc.fecha) {
             proc.fecha = today;
           }
         });
-        
+
         this.audioAnalysisResult = result;
         this.showAnalysisPreview = true;
         this.isAnalyzing = false;
@@ -1143,16 +1143,16 @@ export class HistoriaClinicaComponent implements OnInit {
 
     this.isAnalyzing = true;
     const today = new Date().toISOString().split('T')[0];
-    
+
     // Crear los planes de tratamiento primero
     const planesObservables = data.planesTratamiento.map((plan: any, index: number) => {
       // Validar campos requeridos
       if (!plan.diagnosticoTratamiento || !plan.pieza || plan.precio === undefined || plan.precio === null) {
         throw new Error(`Plan ${index + 1}: Faltan campos requeridos (diagnosticoTratamiento, pieza, precio)`);
       }
-      
+
       const precio = typeof plan.precio === 'string' ? parseFloat(plan.precio) : plan.precio;
-      
+
       const planData = {
         diagnosticoTratamiento: plan.diagnosticoTratamiento,
         estado: plan.estado || 'Pendiente',
@@ -1180,7 +1180,7 @@ export class HistoriaClinicaComponent implements OnInit {
           if (!proc.trabajoRealizado) {
             throw new Error(`Procedimiento ${index + 1}: Falta el campo "trabajoRealizado"`);
           }
-          
+
           const planIndex = proc.planIndex;
           if (planIndex === undefined || planIndex < 0 || planIndex >= planesCreados.length) {
             throw new Error(`Procedimiento ${index + 1}: planIndex inválido (${planIndex}). Debe ser un número entre 0 y ${planesCreados.length - 1}`);

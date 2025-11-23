@@ -45,7 +45,8 @@ export interface SearchResponse {
   providedIn: 'root'
 })
 export class PacienteService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/pacientes';
+  //private apiUrl = 'https://backend-clinica-dental.onrender.com/api/pacientes';
+  private apiUrl = 'http://localhost:3000/api/pacientes';
 
   constructor(private http: HttpClient) {}
 

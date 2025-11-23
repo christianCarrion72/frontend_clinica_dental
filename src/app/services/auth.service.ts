@@ -13,7 +13,8 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/auth';
+  //private apiUrl = 'https://backend-clinica-dental.onrender.com/api/auth';
+  private apiUrl = 'http://localhost:3000/api/auth';
 
   constructor(
     private http: HttpClient,

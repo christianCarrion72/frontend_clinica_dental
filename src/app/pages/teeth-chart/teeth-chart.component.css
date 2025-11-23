@@ -14,18 +14,12 @@
 }
 
 .tooth {
-  position: relative;
-  cursor: default; 
-}
-
-.tooth img {
-  display: block;
-  max-width: none;
-  height: auto;
-  pointer-events: auto; 
   cursor: pointer;
 }
 
+.tooth svg {
+  display: block;
+}
 .tooth .overlay {
   position: absolute;
   top: 0;

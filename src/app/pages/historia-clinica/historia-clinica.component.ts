@@ -9,16 +9,18 @@ import { ProcedimientoService, Procedimiento } from '../../services/procedimient
 import { AiService, AudioAnalysisResponse } from '../../services/ai.service';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
+import { PacienteDetailComponent } from '../paciente-detail/paciente-detail.component';
 
 @Component({
   selector: 'app-historia-clinica',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, PacienteDetailComponent],
   templateUrl: './historia-clinica.component.html',
   styleUrls: ['./historia-clinica.component.css']
 })
 export class HistoriaClinicaComponent implements OnInit {
   pacienteId: string | null = null;
+  pacienteIdNumber: number | null = null;
   pacienteName: string | null = null;
   activeTab: string = 'historia-clinica';
 
@@ -116,6 +118,7 @@ export class HistoriaClinicaComponent implements OnInit {
   ngOnInit(): void {
     this.pacienteId = this.route.snapshot.paramMap.get('id');
     this.pacienteName = this.route.snapshot.queryParamMap.get('nombre');
+    this.pacienteIdNumber = this.pacienteId ? parseInt(this.pacienteId, 10) : null;
 
     if (this.pacienteId) {
       this.loadHistoriaClinica();

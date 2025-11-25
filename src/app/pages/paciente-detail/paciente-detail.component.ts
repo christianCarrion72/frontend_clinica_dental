@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -14,34 +14,46 @@ import { PatientDentalChart } from '../../shared/dental-chart.types';
   styleUrl: './paciente-detail.component.css'
 })
 export class PacienteDetailComponent implements OnInit {
+  @Input() pacienteId?: number;
+
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
   private odontogramaApi = inject(OdontogramaService);
 
   loading = true;
   error?: string;
-  pacienteId!: number;
 
   odontograma?: OdontogramaEntity;
   patientChart?: PatientDentalChart;
 
   ngOnInit() {
-    this.pacienteId = Number(this.route.snapshot.paramMap.get('id'));
+    const idFromInput = this.pacienteId;
+    const idFromRouteStr = this.route.snapshot.paramMap.get('id');
+    const idFromRoute = idFromRouteStr ? Number(idFromRouteStr) : NaN;
+    const id = idFromInput ?? idFromRoute;
 
-    this.odontogramaApi.getByPacienteId(this.pacienteId).subscribe({
+    if (!id || Number.isNaN(id)) {
+      this.loading = false;
+      this.error = 'No se encontró el ID del paciente';
+      return;
+    }
+
+    this.pacienteId = id;
+
+    this.odontogramaApi.getByPacienteId(id).subscribe({
       next: (existing) => {
         if (existing) {
           this.odontograma = existing;
-          this.patientChart = this.mapToChart(existing.json, this.pacienteId);
+          this.patientChart = this.mapToChart(existing.json, id);
           this.loading = false;
         } else {
           // Primera vez: cargar layout y crear
           this.http.get<any>('assets/odontogram-layout.json').subscribe({
             next: (layout) => {
-              this.odontogramaApi.create(this.pacienteId, layout).subscribe({
+              this.odontogramaApi.create(id, layout).subscribe({
                 next: (created) => {
                   this.odontograma = created;
-                  this.patientChart = this.mapToChart(created.json, this.pacienteId);
+                  this.patientChart = this.mapToChart(created.json, id);
                   this.loading = false;
                 },
                 error: (err) => {
@@ -83,7 +95,8 @@ export class PacienteDetailComponent implements OnInit {
 
   // Agrega este método para manejar el guardado del odontograma
   persistChart(chart: PatientDentalChart) {
-    if (!this.odontograma || !this.patientChart) {
+    const id = this.pacienteId;
+    if (!this.odontograma || !this.patientChart || !id) {
       this.error = 'No se encontró el odontograma para guardar';
       return;
     }
@@ -91,7 +104,7 @@ export class PacienteDetailComponent implements OnInit {
     this.odontogramaApi.update(this.odontograma.id, nextLayout).subscribe({
       next: (updated) => {
         this.odontograma = updated;
-        this.patientChart = this.mapToChart(updated.json, this.pacienteId);
+        this.patientChart = this.mapToChart(updated.json, id);
       },
       error: (err) => {
         console.error(err);

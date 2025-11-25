@@ -180,6 +180,9 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="hasHistoriaClinica && pacienteIdNumber !== null" class="mt-8">
+              <app-paciente-detail [pacienteId]="pacienteIdNumber"></app-paciente-detail>
+            </div>
 
             <!-- Formulario de Creación/Edición -->
             <div *ngIf="showForm && !isLoading && activeTab === 'historia-clinica'" class="space-y-4">

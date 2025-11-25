@@ -29,7 +29,8 @@ export interface UpdatePlanTratamientoDto extends Partial<CreatePlanTratamientoD
   providedIn: 'root'
 })
 export class PlanTratamientoService {
-  private apiUrl = 'http://127.0.0.1:3000/api/plan-tratamientos';
+  //private apiUrl = 'http://127.0.0.1:3000/api/plan-tratamientos';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/plan-tratamientos';
 
   constructor(private http: HttpClient) {}
 

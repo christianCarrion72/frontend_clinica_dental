@@ -24,7 +24,8 @@ export interface AudioAnalysisResponse {
   providedIn: 'root'
 })
 export class AiService {
-  private apiUrl = 'http://127.0.0.1:3000/api/ai';
+  //private apiUrl = 'http://127.0.0.1:3000/api/ai';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/ai';
 
   constructor(private http: HttpClient) {}
 

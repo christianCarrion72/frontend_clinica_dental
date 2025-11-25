@@ -32,7 +32,8 @@ export interface UpdateHistoriaClinicaDto extends Partial<CreateHistoriaClinicaD
   providedIn: 'root'
 })
 export class HistoriaClinicaService {
-  private apiUrl = 'http://127.0.0.1:3000/api/historia-clinicas';
+  //private apiUrl = 'http://127.0.0.1:3000/api/historia-clinicas';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/historia-clinicas';
 
   constructor(private http: HttpClient) {}
 

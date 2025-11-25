@@ -1,0 +1,67 @@
+import { Odontograma } from 'src/odontograma/entities/odontograma.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('odontrograma_version')
+export class OdontrogramaVersion {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  nombreVersion: string;
+
+  @Column({ type: 'jsonb' })
+  json: Record<string, any>;
+
+  @ManyToOne(
+    () => Odontograma,
+    (odontograma) => odontograma.odontrograma_versions,
+  )
+  @JoinColumn({ name: 'odontograma_id' })
+  odontograma: Odontograma;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @DeleteDateColumn()
+  deleted_at: Date;
+}
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsObject, IsString } from 'class-validator';
+
+export class CreateOdontrogramaVersionDto {
+  @ApiProperty({
+    description: 'Nombre de la versión del odontograma',
+    example: 'Inicial',
+  })
+  @IsString()
+  @IsNotEmpty()
+  nombreVersion: string;
+
+  @ApiProperty({
+    description: 'Contenido de la versión en JSON (como cadena)',
+    example: '{"dientes":[]}',
+  })
+  @IsObject()
+  @IsNotEmpty()
+  json: Record<string, any>;
+
+  @ApiProperty({
+    description: 'ID del odontograma al que pertenece esta versión',
+    example: 1,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  odontogramaId: number;
+}

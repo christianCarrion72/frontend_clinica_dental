@@ -25,7 +25,8 @@ export interface UpdateProcedimientoDto extends Partial<CreateProcedimientoDto> 
   providedIn: 'root'
 })
 export class ProcedimientoService {
-  private apiUrl = 'http://127.0.0.1:3000/api/procedimientos';
+  //private apiUrl = 'http://127.0.0.1:3000/api/procedimientos';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/procedimientos';
 
   constructor(private http: HttpClient) {}
 

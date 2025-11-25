@@ -7,8 +7,8 @@ import { CreateFamiliarDto, Familiar } from './paciente.service';
   providedIn: 'root'
 })
 export class FamiliarService {
-  //private apiUrl = 'https://backend-clinica-dental.onrender.com/api/familiares';
-  private apiUrl = 'http://localhost:3000/api/familiares';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/familiares';
+  //private apiUrl = 'http://localhost:3000/api/familiares';
 
   constructor(private http: HttpClient) {}
 

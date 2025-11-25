@@ -1,8 +1,8 @@
-<div id="odontogramCapture" class="odontogram-layout">
+<div [attr.id]="captureId" class="odontogram-layout">
   <section class="odontogram-main">
     <div class="teeth-chart">
       <div class="teeth-row upper-front">
-        <div class="tooth" *ngFor="let n of upperTeeth" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'front')">
+        <div class="tooth" *ngFor="let n of upperTeeth" [attr.data-tooth]="n" [attr.data-view]="'front'" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'front')">
           <img *ngIf="getImageSrc(n,'front')"
                (click)="onToothClick(n); $event.stopPropagation()"
                [src]="getImageSrc(n,'front')"
@@ -10,19 +10,20 @@
                [alt]="'Tooth '+n"
                [width]="svgWidth('front')"
                [height]="svgHeight('front')" />
-          <!-- Tinta recortada por la silueta del diente (mask con la misma imagen) -->
-          <svg *ngIf="shouldTint(n)" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay overlay-tint">
-            <defs>
-              <mask [attr.id]="'mask-front-'+n" maskContentUnits="userSpaceOnUse" maskUnits="userSpaceOnUse">
-                <image [attr.href]="getImageSrc(n,'front')"
-                       [attr.x]="0" [attr.y]="0"
-                       [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')"></image>
-              </mask>
-            </defs>
-            <rect [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')"
-                  [attr.fill]="tintFill(n)"
-                  [attr.mask]="'url(#mask-front-'+n+')'"></rect>
-          </svg>
+          <!-- Tinta recortada por silueta usando CSS mask para igualar exportación -->
+          <div *ngIf="shouldTint(n)" class="overlay overlay-tint"
+               [style.background-color]="tintFill(n)"
+               [style.webkitMaskImage]="'url('+getImageSrc(n,'front')+')'"
+               [style.maskImage]="'url('+getImageSrc(n,'front')+')'"
+               [style.webkitMaskSize]="'100% 100%'"
+               [style.maskSize]="'100% 100%'"
+               [style.webkitMaskRepeat]="'no-repeat'"
+               [style.maskRepeat]="'no-repeat'"
+               [style.webkitMaskPosition]="'0 0'"
+               [style.maskPosition]="'0 0'"
+               [style.width.px]="svgWidth('front')"
+               [style.height.px]="svgHeight('front')"
+          ></div>
           <!-- Overlay de shapes con color -->
           <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.front" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay overlay-path" (click)="onToothClick(n); $event.stopPropagation()">
             <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.front" [attr.fill]="pathFill(n)" [attr.stroke]="pathStroke(n)" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
@@ -31,7 +32,7 @@
       </div>
     
       <div class="teeth-row upper-top">
-        <div class="tooth" *ngFor="let n of upperTeeth" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'top')">
+        <div class="tooth" *ngFor="let n of upperTeeth" [attr.data-tooth]="n" [attr.data-view]="'top'" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'top')">
           <img *ngIf="getImageSrc(n,'top')"
                (click)="onToothClick(n); $event.stopPropagation()"
                [src]="getImageSrc(n,'top')"
@@ -39,18 +40,19 @@
                [alt]="'Tooth '+n"
                [width]="svgWidth('top')"
                [height]="svgHeight('top')" />
-          <svg *ngIf="shouldTint(n)" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay overlay-tint">
-            <defs>
-              <mask [attr.id]="'mask-top-'+n" maskContentUnits="userSpaceOnUse" maskUnits="userSpaceOnUse">
-                <image [attr.href]="getImageSrc(n,'top')"
-                       [attr.x]="0" [attr.y]="0"
-                       [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')"></image>
-              </mask>
-            </defs>
-            <rect [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')"
-                  [attr.fill]="tintFill(n)"
-                  [attr.mask]="'url(#mask-top-'+n+')'"></rect>
-          </svg>
+          <div *ngIf="shouldTint(n)" class="overlay overlay-tint"
+               [style.background-color]="tintFill(n)"
+               [style.webkitMaskImage]="'url('+getImageSrc(n,'top')+')'"
+               [style.maskImage]="'url('+getImageSrc(n,'top')+')'"
+               [style.webkitMaskSize]="'100% 100%'"
+               [style.maskSize]="'100% 100%'"
+               [style.webkitMaskRepeat]="'no-repeat'"
+               [style.maskRepeat]="'no-repeat'"
+               [style.webkitMaskPosition]="'0 0'"
+               [style.maskPosition]="'0 0'"
+               [style.width.px]="svgWidth('top')"
+               [style.height.px]="svgHeight('top')"
+          ></div>
           <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.top" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay overlay-path" (click)="onToothClick(n); $event.stopPropagation()">
             <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.top" [attr.fill]="pathFill(n)" [attr.stroke]="pathStroke(n)" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
           </svg>
@@ -58,20 +60,21 @@
       </div>
     
       <div class="teeth-row lower-top">
-        <div class="tooth" *ngFor="let n of lowerTeeth" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'top')">
+        <div class="tooth" *ngFor="let n of lowerTeeth" [attr.data-tooth]="n" [attr.data-view]="'top'" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'top')">
           <img *ngIf="getImageSrc(n,'top')" (click)="onToothClick(n); $event.stopPropagation()" [src]="getImageSrc(n,'top')" [attr.data-origin]="getOrigin(n,'top')" [alt]="'Tooth '+n" [width]="svgWidth('top')" [height]="svgHeight('top')" />
-          <svg *ngIf="shouldTint(n)" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay">
-            <defs>
-              <mask [attr.id]="'mask-top-'+n" maskContentUnits="userSpaceOnUse">
-                <image [attr.href]="getImageSrc(n,'top')"
-                       [attr.x]="0" [attr.y]="0"
-                       [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')"></image>
-              </mask>
-            </defs>
-            <rect [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')"
-                  [attr.fill]="tintFill(n)"
-                  [attr.mask]="'url(#mask-top-'+n+')'"></rect>
-          </svg>
+          <div *ngIf="shouldTint(n)" class="overlay overlay-tint"
+               [style.background-color]="tintFill(n)"
+               [style.webkitMaskImage]="'url('+getImageSrc(n,'top')+')'"
+               [style.maskImage]="'url('+getImageSrc(n,'top')+')'"
+               [style.webkitMaskSize]="'100% 100%'"
+               [style.maskSize]="'100% 100%'"
+               [style.webkitMaskRepeat]="'no-repeat'"
+               [style.maskRepeat]="'no-repeat'"
+               [style.webkitMaskPosition]="'0 0'"
+               [style.maskPosition]="'0 0'"
+               [style.width.px]="svgWidth('top')"
+               [style.height.px]="svgHeight('top')"
+          ></div>
           <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.top" [attr.width]="svgWidth('top')" [attr.height]="svgHeight('top')" class="overlay overlay-path" (click)="onToothClick(n); $event.stopPropagation()">
             <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.top" [attr.fill]="pathFill(n)" [attr.stroke]="pathStroke(n)" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
           </svg>
@@ -79,20 +82,21 @@
       </div>
     
       <div class="teeth-row lower-front">
-        <div class="tooth" *ngFor="let n of lowerTeeth" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'front')">
+        <div class="tooth" *ngFor="let n of lowerTeeth" [attr.data-tooth]="n" [attr.data-view]="'front'" (click)="onToothClick(n)" [style.transform]="offsetTransform(n, 'front')">
           <img *ngIf="getImageSrc(n,'front')" (click)="onToothClick(n); $event.stopPropagation()" [src]="getImageSrc(n,'front')" [attr.data-origin]="getOrigin(n,'front')" [alt]="'Tooth '+n" [width]="svgWidth('front')" [height]="svgHeight('front')" />
-          <svg *ngIf="shouldTint(n)" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay overlay-tint">
-            <defs>
-              <mask [attr.id]="'mask-front-'+n" maskContentUnits="userSpaceOnUse" maskUnits="userSpaceOnUse">
-                <image [attr.href]="getImageSrc(n,'front')"
-                       [attr.x]="0" [attr.y]="0"
-                       [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')"></image>
-              </mask>
-            </defs>
-            <rect [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')"
-                  [attr.fill]="tintFill(n)"
-                  [attr.mask]="'url(#mask-front-'+n+')'"></rect>
-          </svg>
+          <div *ngIf="shouldTint(n)" class="overlay overlay-tint"
+               [style.background-color]="tintFill(n)"
+               [style.webkitMaskImage]="'url('+getImageSrc(n,'front')+')'"
+               [style.maskImage]="'url('+getImageSrc(n,'front')+')'"
+               [style.webkitMaskSize]="'100% 100%'"
+               [style.maskSize]="'100% 100%'"
+               [style.webkitMaskRepeat]="'no-repeat'"
+               [style.maskRepeat]="'no-repeat'"
+               [style.webkitMaskPosition]="'0 0'"
+               [style.maskPosition]="'0 0'"
+               [style.width.px]="svgWidth('front')"
+               [style.height.px]="svgHeight('front')"
+          ></div>
           <svg *ngIf="patientChart?.teeth?.[n]?.shapes?.front" [attr.width]="svgWidth('front')" [attr.height]="svgHeight('front')" class="overlay overlay-path" (click)="onToothClick(n); $event.stopPropagation()">
             <path [attr.d]="patientChart?.teeth?.[n]?.shapes?.front" [attr.fill]="pathFill(n)" [attr.stroke]="pathStroke(n)" stroke-width="2" (click)="onToothClick(n); $event.stopPropagation()" />
           </svg>
@@ -122,8 +126,8 @@
         <span class="legend-label">{{ item.label }}</span>
       </div>
     </div>
-    <div class="legend-actions">
-      <button class="btn btn-primary" (click)="exportImage()">Importar</button>
+  <div class="legend-actions">
+    <button class="btn btn-primary" (click)="exportImageCanvas()">Exportar</button>
     </div>
   </aside>
 </div>

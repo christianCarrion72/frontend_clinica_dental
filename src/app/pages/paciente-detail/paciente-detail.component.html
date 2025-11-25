@@ -9,5 +9,10 @@
       [scale]="0.30"
       (chartSaved)="persistChart($event)">
     </app-teeth-chart>
+
+    <app-odontograma-version-panel
+      [odontogramaId]="odontograma?.id"
+      [json]="odontograma?.json">
+    </app-odontograma-version-panel>
   </div>
 </div>

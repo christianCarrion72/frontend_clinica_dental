@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { OdontogramaService, OdontogramaEntity } from '../../services/odontograma.service';
 import { TeethChartComponent } from '../teeth-chart/teeth-chart.component';
+import { OdontogramaVersionPanelComponent } from '../odontograma-version-panel/odontograma-version-panel.component';
 import { PatientDentalChart } from '../../shared/dental-chart.types';
 
 @Component({
   selector: 'app-paciente-detail',
   standalone: true,
-  imports: [CommonModule, TeethChartComponent],
+  imports: [CommonModule, TeethChartComponent, OdontogramaVersionPanelComponent],
   templateUrl: './paciente-detail.component.html',
   styleUrl: './paciente-detail.component.css'
 })

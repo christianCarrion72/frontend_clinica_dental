@@ -52,7 +52,8 @@ export interface CreateHistoriaCompletaDto {
   providedIn: 'root'
 })
 export class HistorialMedicoService {
-  private apiUrl = 'http://127.0.0.1:3000/api/historial-medicos';
+  //private apiUrl = 'http://127.0.0.1:3000/api/historial-medicos';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api/historial-medicos';
 
   constructor(private http: HttpClient) {}
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toothImagesFrontView, toothImagesTopView } from '../../shared/tooth-images';
 import { ToothEditorComponent } from '../tooth-editor/tooth-editor.component';
@@ -13,11 +13,13 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './teeth-chart.component.html',
   styleUrls: ['./teeth-chart.component.css']
 })
-export class TeethChartComponent implements OnInit {
+export class TeethChartComponent implements OnInit, OnChanges {
   @Input() patientChart?: PatientDentalChart | null;
   @Output() toothClick = new EventEmitter<number>();
   @Output() chartSaved = new EventEmitter<PatientDentalChart>();
   @Input() scale = 0.30;
+  @Input() readonly = false;
+  @Input() captureId = 'odontogramCapture';
 
   // Filas (cargadas desde JSON)
   upperTeeth = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
@@ -102,6 +104,36 @@ export class TeethChartComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['patientChart'] && this.patientChart?.layout) {
+      const layout = this.patientChart.layout;
+      // Filas
+      if (layout.rows) {
+        this.upperTeeth = layout.rows.upperFront ?? this.upperTeeth;
+        this.lowerTeeth = layout.rows.lowerFront ?? this.lowerTeeth;
+      }
+      // Imágenes desde layout del paciente
+      this.imagesFront = { ...this.imagesFront, ...(layout.images?.front ?? {}) };
+      this.imagesTop = { ...this.imagesTop, ...(layout.images?.top ?? {}) };
+      this.jsonFrontSet = new Set(Object.keys(layout.images?.front ?? {}).map(k => Number(k)));
+      this.jsonTopSet = new Set(Object.keys(layout.images?.top ?? {}).map(k => Number(k)));
+      // Offsets
+      this.frontOffsets = layout.offsets?.front ?? this.frontOffsets;
+      this.topOffsets = layout.offsets?.top ?? this.topOffsets;
+      // Tamaños base
+      if (layout.meta?.front && layout.meta?.top) {
+        this.baseSizes.front = {
+          w: layout.meta.front.width ?? this.baseSizes.front.w,
+          h: layout.meta.front.height ?? this.baseSizes.front.h,
+        };
+        this.baseSizes.top = {
+          w: layout.meta.top.width ?? this.baseSizes.top.w,
+          h: layout.meta.top.height ?? this.baseSizes.top.h,
+        };
+      }
+    }
+  }
+
   svgWidth(view: 'front'|'top') { return Math.round(this.baseSizes[view].w * this.scale); }
   svgHeight(view: 'front'|'top') { return Math.round(this.baseSizes[view].h * this.scale); }
 
@@ -113,6 +145,7 @@ export class TeethChartComponent implements OnInit {
   editingTooth: number | null = null;
 
   onToothClick(n: number) { 
+    if (this.readonly) return;
     console.log('Tooth clicked:', n); // Para debugging
     this.toothClick.emit(n); 
     this.loadToothData(n);
@@ -241,29 +274,160 @@ export class TeethChartComponent implements OnInit {
     return (window as any).html2canvas;
   }
 
+  // Alternativa recomendada: html-to-image, con mejor soporte para SVG/masks
+  private async ensureHtmlToImage(): Promise<any> {
+    const w = window as any;
+    if (w.htmlToImage) return w.htmlToImage;
+    await new Promise<void>((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.min.js';
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('No se pudo cargar html-to-image'));
+      document.head.appendChild(s);
+    });
+    return (window as any).htmlToImage;
+  }
+
   // Exporta como imagen PNG el contenedor que incluye odontograma+leyenda
   async exportImage() {
+    const el = document.getElementById(this.captureId) as HTMLElement | null;
+    if (!el) {
+      console.error(`Contenedor ${this.captureId} no encontrado`);
+      return;
+    }
+    const fileName = `odontograma_${new Date().toISOString().slice(0,10)}.png`;
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    try {
+      // Primero intentamos con html-to-image (mejor SVG support)
+      const htmlToImage = await this.ensureHtmlToImage();
+      const dataUrl = await htmlToImage.toPng(el, {
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+        pixelRatio
+      });
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = fileName;
+      link.click();
+      return;
+    } catch (e) {
+      console.warn('Fallo html-to-image, usando html2canvas como fallback:', e);
+    }
+
     try {
       const html2canvas = await this.ensureHtml2Canvas();
-      const el = document.getElementById('odontogramCapture');
-      if (!el) {
-        console.error('Contenedor odontogramCapture no encontrado');
-        return;
-      }
       const canvas = await html2canvas(el, {
         backgroundColor: '#ffffff',
         useCORS: true,
         allowTaint: true,
-        scale: Math.min(window.devicePixelRatio || 1, 2)
+        scale: pixelRatio
       });
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `odontograma_${new Date().toISOString().slice(0,10)}.png`;
+      link.download = fileName;
       link.click();
     } catch (e) {
       console.error('Error exportando imagen del odontograma:', e);
       alert('No se pudo generar la imagen. Revisa la consola del navegador.');
     }
+  }
+
+  // Export robusto: dibuja el odontograma a un <canvas>, respetando overlays
+  async exportImageCanvas() {
+    const container = document.getElementById(this.captureId) as HTMLElement | null;
+    if (!container) {
+      console.error(`Contenedor ${this.captureId} no encontrado`);
+      return;
+    }
+    const rect = container.getBoundingClientRect();
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(rect.width * pixelRatio);
+    canvas.height = Math.round(rect.height * pixelRatio);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = true;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const toBlob = async (): Promise<Blob> => new Promise(res => canvas.toBlob(b => res(b!), 'image/png'));
+
+    const toothEls = Array.from(container.querySelectorAll('.tooth')) as HTMLElement[];
+    // Cargar imágenes por adelantado para evitar parpadeos
+    const loadImage = (src: string) => new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = (e) => reject(e);
+      img.src = src;
+    });
+
+    for (const el of toothEls) {
+      const n = Number(el.getAttribute('data-tooth'));
+      const view = (el.getAttribute('data-view') as 'front'|'top') || 'front';
+      const imgEl = el.querySelector('img') as HTMLImageElement | null;
+      if (!imgEl) continue;
+
+      const b = el.getBoundingClientRect();
+      const x = Math.round((b.left - rect.left) * pixelRatio);
+      const y = Math.round((b.top - rect.top) * pixelRatio);
+      const w = Math.round(b.width * pixelRatio);
+      const h = Math.round(b.height * pixelRatio);
+
+      try {
+        const img = await loadImage(imgEl.src);
+        ctx.drawImage(img, x, y, w, h);
+
+        // Tinte general de la pieza si aplica (recortado por la silueta de la imagen)
+        if (this.shouldTint(n)) {
+          const overlay = document.createElement('canvas');
+          overlay.width = w;
+          overlay.height = h;
+          const octx = overlay.getContext('2d');
+          if (octx) {
+            // Pintamos el color
+            octx.fillStyle = this.tintFill(n);
+            octx.fillRect(0, 0, w, h);
+            // Recortamos usando la imagen como máscara (alpha)
+            octx.globalCompositeOperation = 'destination-in';
+            octx.drawImage(img, 0, 0, w, h);
+            // Dibujamos el resultado sobre el canvas principal
+            ctx.drawImage(overlay, x, y);
+          }
+        }
+
+        // Shapes SVG convertidos a canvas con Path2D
+        const pathStr = view === 'front' ? (this.patientChart?.teeth?.[n]?.shapes?.front || '')
+                                         : (this.patientChart?.teeth?.[n]?.shapes?.top || '');
+        if (pathStr) {
+          const scaleX = w / (this.baseSizes[view].w * pixelRatio);
+          const scaleY = h / (this.baseSizes[view].h * pixelRatio);
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(scaleX, scaleY);
+          const p = new Path2D(pathStr);
+          // Relleno y borde como en SVG
+          ctx.fillStyle = this.pathFill(n);
+          ctx.strokeStyle = this.pathStroke(n);
+          ctx.lineWidth = 2; // coincide con stroke-width="2"
+          ctx.fill(p);
+          ctx.stroke(p);
+          ctx.restore();
+        }
+      } catch (e) {
+        console.warn('No se pudo dibujar la pieza', n, e);
+      }
+    }
+
+    // Descargar
+    const blob = await toBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `odontograma_${new Date().toISOString().slice(0,10)}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

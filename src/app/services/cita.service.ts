@@ -55,8 +55,8 @@ interface HorarioFecha {
   providedIn: 'root'
 })
 export class CitasService {
-  //private apiUrl = 'https://backend-clinica-dental.onrender.com/api';
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://backend-clinica-dental.onrender.com/api';
+  //private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) {}
 

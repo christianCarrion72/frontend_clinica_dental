@@ -12,11 +12,11 @@ import { ToothEditorStateService } from '../../state.service'
 export class PathologyTypesComponent {
   s = inject(ToothEditorStateService)
   types = [
-    { label: 'DECAY', value: 'decay' },
-    { label: 'FRACTURE', value: 'fracture' },
-    { label: 'TOOTH WEAR', value: 'toothWear' },
-    { label: 'DISCOLORATION', value: 'discoloration' },
+    { label: 'CARIES', value: 'decay' },
+    { label: 'FRACTURA', value: 'fracture' },
+    { label: 'DESGASTE DENTAL', value: 'toothWear' },
+    { label: 'DISCOLORACIÓN', value: 'discoloration' },
     { label: 'APICAL', value: 'apical' },
-    { label: 'DEVELOPMENT DISORDER', value: 'developmentDisorder' }
+    { label: 'TRASTORNO DEL DESARROLLO', value: 'developmentDisorder' }
   ]
 }

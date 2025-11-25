@@ -1,5 +1,5 @@
 <div class="tooth">
-  <h3>{{ view === 'front' ? 'Front View' : 'Top View' }}</h3>
+  <h3>{{ view === 'front' ? 'Vista frontal' : 'Vista oclusal' }}</h3>
   <svg [attr.width]="width" [attr.height]="height" (click)="onSvgClick($event)" [style.cursor]="isDrawing && activeView === view ? 'crosshair' : 'default'">
     <image *ngIf="imageSrc" [attr.x]="groupX" [attr.y]="0" [attr.width]="imgWidth" [attr.height]="height" [attr.href]="imageSrc"></image>
     <g [attr.transform]="'translate(' + groupX + ',0)'">

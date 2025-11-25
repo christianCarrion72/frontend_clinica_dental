@@ -70,7 +70,8 @@ interface ResultadoGeneracion {
   providedIn: 'root'
 })
 export class HorariosService {
-  private apiUrl = 'http://127.0.0.1:3000/api';
+  //private apiUrl = 'https://backend-clinica-dental.onrender.com/api';
+  private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) {}
 

@@ -1,3 +1,39 @@
+/* Layout: odontograma (izq) + leyenda (der) */
+.odontogram-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+}
+.odontogram-main {
+  flex: 1;       /* que el odontograma use el ancho disponible */
+  min-width: 0;  /* evita que empuje la leyenda a una nueva línea */
+}
+
+/* Panel de leyenda a la derecha */
+.legend-panel {
+  width: 260px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 8px;
+  align-self: flex-start;
+}
+.legend-title { font-weight: 600; margin-bottom: 8px; }
+.legend-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.color-swatch { width: 16px; height: 16px; border: 2px solid #999; border-radius: 4px; }
+.swatch-ring { border-radius: 50%; }
+.legend-actions .btn {
+  appearance: none; border: 1px solid #0369a1; background: #0284c7; color: #fff;
+  padding: 8px 12px; border-radius: 6px; font-weight: 600; cursor: pointer;
+}
+.legend-actions .btn:hover { background: #0369a1; }
+
+/* --- tus estilos existentes del componente --- */
 .teeth-chart {
   display: flex;
   flex-direction: column;
@@ -14,26 +50,33 @@
 }
 
 .tooth {
+  cursor: pointer;
   position: relative;
-  cursor: default; 
+  display: inline-block;
 }
-
 .tooth img {
   display: block;
-  max-width: none;
-  height: auto;
-  pointer-events: auto; 
-  cursor: pointer;
 }
-
+.tooth svg {
+  display: block;
+}
 .tooth .overlay {
   position: absolute;
   top: 0;
   left: 0;
   pointer-events: auto;
   cursor: pointer;
-  
+  z-index: 1;
+
   path {
     cursor: pointer;
   }
+}
+.tooth .overlay-path {
+  z-index: 2;
+}
+
+/* La "tinta" no debe interceptar clics, solo colorear */
+.overlay-tint {
+  pointer-events: none;
 }

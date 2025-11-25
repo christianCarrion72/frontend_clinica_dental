@@ -430,4 +430,8 @@ export class PacientesComponent implements OnInit, OnDestroy {
       queryParams: { nombre: paciente.nombre }
     });
   }
+
+  goToDetail(paciente: Paciente) {
+    this.router.navigate(['/paciente-detail', paciente.id]);
+  }
 }

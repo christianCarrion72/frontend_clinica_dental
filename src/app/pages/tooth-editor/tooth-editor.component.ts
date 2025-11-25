@@ -42,7 +42,16 @@ export class ToothEditorComponent {
   }
 
   save() {
-    const updated = this.service.setToothShapes(this.patientChart, this.toothNumber, this.s.frontSvgPath(), this.s.topSvgPath())
-    this.service.saveChart(updated).subscribe(() => this.saved.emit(updated))
+    const partial = {
+      shapes: {
+        front: this.s.frontSvgPath(),
+        top: this.s.topSvgPath(),
+      },
+      pathology: this.s.selectedPathology(),
+      pathologyDetails: this.s.pathologyDetails(),
+      zones: this.s.selectedZones(),
+    }
+    const updated = this.service.updateTooth(this.patientChart, this.toothNumber, partial)
+    this.saved.emit(updated)
   }
 }

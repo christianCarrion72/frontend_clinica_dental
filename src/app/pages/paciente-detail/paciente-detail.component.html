@@ -5,6 +5,10 @@
   <div *ngIf="error" class="text-red-600">{{ error }}</div>
 
   <div *ngIf="patientChart">
-    <app-teeth-chart [patientChart]="patientChart" [scale]="0.30"></app-teeth-chart>
+    <app-teeth-chart
+      [patientChart]="patientChart"
+      [scale]="0.30"
+      (chartSaved)="persistChart($event)">
+    </app-teeth-chart>
   </div>
 </div>

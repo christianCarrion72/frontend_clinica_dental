@@ -1,42 +1,42 @@
 export const pathologyOptions = {
   decay: {
-    stage: [
-      { value: 'dentin', label: 'Dentin', next: { cavitation: [
-        { value: 'cavitation', label: 'Cavitation', next: { pulp: [
-          { value: 'pulpInvolved', label: 'Pulp Involved', next: { level: [
+    etapa: [
+      { value: 'dentin', label: 'Dentina', next: { cavitación: [
+        { value: 'cavitation', label: 'Cavitación', next: { pulpa: [
+          { value: 'pulpInvolved', label: 'Pulpa comprometida', next: { nivel: [
             { value: 'C1', label: 'C1' }, { value: 'C2', label: 'C2' }, { value: 'C3', label: 'C3' }, { value: 'C4', label: 'C4' }
           ] } },
-          { value: 'pulpNotInvolved', label: 'Pulp Not Involved', next: { level: [
+          { value: 'pulpNotInvolved', label: 'Pulpa no comprometida', next: { nivel: [
             { value: 'C1', label: 'C1' }, { value: 'C2', label: 'C2' }, { value: 'C3', label: 'C3' }, { value: 'C4', label: 'C4' }
           ] } }
         ] } },
-        { value: 'noCavitation', label: 'No Cavitation', next: { level: [
+        { value: 'noCavitation', label: 'Sin cavitación', next: { nivel: [
           { value: 'C1', label: 'C1' }, { value: 'C2', label: 'C2' }, { value: 'C3', label: 'C3' }, { value: 'C4', label: 'C4' }
         ] } }
       ] } },
-      { value: 'enamel', label: 'Enamel', next: { cavitation: [
-        { value: 'cavitation', label: 'Cavitation', next: { level: [
+      { value: 'enamel', label: 'Esmalte', next: { cavitación: [
+        { value: 'cavitation', label: 'Cavitación', next: { nivel: [
           { value: 'C1', label: 'C1' }, { value: 'C2', label: 'C2' }, { value: 'C3', label: 'C3' }, { value: 'C4', label: 'C4' }
         ] } },
-        { value: 'noCavitation', label: 'No Cavitation', next: { level: [
+        { value: 'noCavitation', label: 'Sin cavitación', next: { nivel: [
           { value: 'C1', label: 'C1' }, { value: 'C2', label: 'C2' }, { value: 'C3', label: 'C3' }, { value: 'C4', label: 'C4' }
         ] } }
       ] } }
     ]
   },
   fracture: {
-    fractureType: [
-      { value: 'crownFracture', label: 'Crown Fracture', next: { direction: [ { value: 'Vertical', label: 'Vertical' }, { value: 'Horizontal', label: 'Horizontal' } ] } },
-      { value: 'rootFracture', label: 'Root Fracture', next: { direction: [ { value: 'Vertical', label: 'Vertical' }, { value: 'Horizontal', label: 'Horizontal' } ] } }
+    tipoFractura: [
+      { value: 'crownFracture', label: 'Fractura coronaria', next: { dirección: [ { value: 'Vertical', label: 'Vertical' }, { value: 'Horizontal', label: 'Horizontal' } ] } },
+      { value: 'rootFracture', label: 'Fractura radicular', next: { dirección: [ { value: 'Vertical', label: 'Vertical' }, { value: 'Horizontal', label: 'Horizontal' } ] } }
     ]
   },
   toothWear: {
-    wearType: [
-      { value: 'abrasion', label: 'Abrasion', next: { surface: { options: [ { value: 'Buccal', label: 'Buccal' }, { value: 'Palatal', label: 'Palatal' } ], multiple: true } } },
-      { value: 'erosion', label: 'Erosion', next: { surface: { options: [ { value: 'Buccal', label: 'Buccal' }, { value: 'Palatal', label: 'Palatal' } ], multiple: true } } }
+    tipoDesgaste: [
+      { value: 'abrasion', label: 'Abrasión', next: { superficie: { options: [ { value: 'Buccal', label: 'Vestibular' }, { value: 'Palatal', label: 'Palatina' } ], multiple: true } } },
+      { value: 'erosion', label: 'Erosión', next: { superficie: { options: [ { value: 'Buccal', label: 'Vestibular' }, { value: 'Palatal', label: 'Palatina' } ], multiple: true } } }
     ]
   },
-  discoloration: { color: [ { value: 'gray', label: 'Gray' }, { value: 'red', label: 'Red' }, { value: 'yellow', label: 'Yellow' } ] },
-  apical: { answer: [ { value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' } ] },
-  developmentDisorder: { answer: [ { value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' } ] }
+  discoloration: { color: [ { value: 'gray', label: 'Gris' }, { value: 'red', label: 'Rojo' }, { value: 'yellow', label: 'Amarillo' } ] },
+  apical: { respuesta: [ { value: 'yes', label: 'Sí' }, { value: 'no', label: 'No' } ] },
+  developmentDisorder: { respuesta: [ { value: 'yes', label: 'Sí' }, { value: 'no', label: 'No' } ] }
 }

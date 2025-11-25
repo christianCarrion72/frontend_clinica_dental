@@ -1,13 +1,13 @@
 <div class="drawing-controls">
   <div class="view-selector">
-    <button [class.active]="s.activeView()==='front'" (click)="s.setView('front')">Front View</button>
-    <button [class.active]="s.activeView()==='top'" (click)="s.setView('top')">Top View</button>
+    <button [class.active]="s.activeView()==='front'" (click)="s.setView('front')">Vista frontal</button>
+    <button [class.active]="s.activeView()==='top'" (click)="s.setView('top')">Vista oclusal</button>
   </div>
-  <textarea [value]="activePath" readonly placeholder="SVG path will appear here..."></textarea>
+  <textarea [value]="activePath" readonly placeholder="El path SVG aparecerá aquí..."></textarea>
   <div class="drawing-buttons">
-    <button (click)="s.startDrawing()">Start Drawing</button>
-    <button (click)="s.reset()">Reset</button>
-    <button (click)="s.copyPath()">Copy Path</button>
-    <button (click)="s.undo()" [disabled]="!canUndo || !s.isDrawing()">Undo</button>
+    <button (click)="s.startDrawing()">Comenzar dibujo</button>
+    <button (click)="s.reset()">Reiniciar</button>
+    <button (click)="s.copyPath()">Copiar trazo</button>
+    <button (click)="s.undo()" [disabled]="!canUndo || !s.isDrawing()">Deshacer</button>
   </div>
-  </div>
+</div>

@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 export class TeethChartComponent implements OnInit {
   @Input() patientChart?: PatientDentalChart | null;
   @Output() toothClick = new EventEmitter<number>();
+  @Output() chartSaved = new EventEmitter<PatientDentalChart>();
   @Input() scale = 0.30;
 
   // Filas (cargadas desde JSON)
@@ -161,8 +162,108 @@ export class TeethChartComponent implements OnInit {
     this.editingTooth = null; 
   }
 
+  private readonly PATHOLOGY_COLOR: Record<string, string> = {
+    decay: '#D32F2F',
+    fracture: '#1976D2',
+    toothWear: '#F57C00',
+    discoloration: '#9C27B0',
+    apical: '#388E3C',
+    developmentDisorder: '#7B1FA2'
+  }
+
+  private nameToHex(name: string): string | null {
+    const map: Record<string, string> = {
+      red: '#FF0000', blue: '#1976D2', yellow: '#FFEB3B', green: '#4CAF50',
+      orange: '#F57C00', gray: '#9E9E9E', black: '#000000', white: '#FFFFFF'
+    }
+    return map[name] || null
+  }
+
+  private alphaColor(c: string, alpha: number): string {
+    const hex = c.startsWith('#') ? c : (this.nameToHex(c) || '#FF0000')
+    const r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16)
+    return `rgba(${r},${g},${b},${alpha})`
+  }
+
+  pathColorStr(n: number): string {
+    const t = this.patientChart?.teeth?.[n]
+    const chosen = t?.pathologyDetails?.['color']
+    if (chosen) return this.nameToHex(chosen) || chosen
+    if (t?.pathology && this.PATHOLOGY_COLOR[t.pathology]) return this.PATHOLOGY_COLOR[t.pathology]
+    return '#FF0000'
+  }
+
+  pathStroke(n: number): string { return this.pathColorStr(n) }
+  pathFill(n: number): string { return this.alphaColor(this.pathColorStr(n), 0.30) }
+
+  // Muestra la "tinta" si hay color explícito, si hay patología o si existen shapes
+  private readonly TINT_ALPHA = 0.28;
+  shouldTint(n: number): boolean {
+    const t = this.patientChart?.teeth?.[n]
+    if (!t) return false
+    const hasExplicitColor = !!t.pathologyDetails?.['color']
+    const hasPathology = !!t.pathology
+    const hasShapes = !!t.shapes?.front || !!t.shapes?.top
+    return hasExplicitColor || hasPathology || hasShapes
+  }
+  tintFill(n: number): string { return this.alphaColor(this.pathColorStr(n), this.TINT_ALPHA) }
+
   onSaved(updatedChart: PatientDentalChart) {
     this.patientChart = updatedChart;
+    this.chartSaved.emit(updatedChart);
     this.closeEditor();
+  }
+
+  // Ítems de leyenda (colores y etiquetas)
+  legendItems = [
+    { label: 'Caries', color: '#D32F2F' },
+    { label: 'Fractura', color: '#1976D2' },
+    { label: 'Exodoncia', color: '#000000' },
+    { label: 'Endodoncia', color: '#FF9800' },
+    { label: 'Tártaro', color: '#FFC107' },
+    { label: 'Restauración', color: '#4CAF50' },
+    { label: 'Pieza ausente', color: '#1E88E5', ring: true },
+    { label: 'Prótesis', color: '#0D47A1' },
+    { label: 'Facetas de desgaste', color: '#8D6E63' }
+  ];
+
+  // Carga html2canvas desde CDN si no está presente
+  private async ensureHtml2Canvas(): Promise<any> {
+    const w = window as any;
+    if (w.html2canvas) return w.html2canvas;
+    await new Promise<void>((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('No se pudo cargar html2canvas'));
+      document.head.appendChild(s);
+    });
+    return (window as any).html2canvas;
+  }
+
+  // Exporta como imagen PNG el contenedor que incluye odontograma+leyenda
+  async exportImage() {
+    try {
+      const html2canvas = await this.ensureHtml2Canvas();
+      const el = document.getElementById('odontogramCapture');
+      if (!el) {
+        console.error('Contenedor odontogramCapture no encontrado');
+        return;
+      }
+      const canvas = await html2canvas(el, {
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        scale: Math.min(window.devicePixelRatio || 1, 2)
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `odontograma_${new Date().toISOString().slice(0,10)}.png`;
+      link.click();
+    } catch (e) {
+      console.error('Error exportando imagen del odontograma:', e);
+      alert('No se pudo generar la imagen. Revisa la consola del navegador.');
+    }
   }
 }

@@ -80,4 +80,23 @@ export class PacienteDetailComponent implements OnInit {
       version: undefined
     };
   }
+
+  // Agrega este método para manejar el guardado del odontograma
+  persistChart(chart: PatientDentalChart) {
+    if (!this.odontograma || !this.patientChart) {
+      this.error = 'No se encontró el odontograma para guardar';
+      return;
+    }
+    const nextLayout = { ...(this.patientChart.layout || {}), teeth: chart.teeth };
+    this.odontogramaApi.update(this.odontograma.id, nextLayout).subscribe({
+      next: (updated) => {
+        this.odontograma = updated;
+        this.patientChart = this.mapToChart(updated.json, this.pacienteId);
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudo guardar el odontograma';
+      }
+    });
+  }
 }

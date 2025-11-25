@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginData = {
     correo: '',
     contrasena: ''
@@ -20,7 +20,10 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    // Evitar navegaciones durante la construcción del componente
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }

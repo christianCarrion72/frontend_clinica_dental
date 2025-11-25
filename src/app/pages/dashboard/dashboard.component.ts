@@ -21,14 +21,16 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userData = this.authService.getUserData();
-    if (userData) {
-      this.userEmail = userData.correo || '';
-      this.userRole = userData.rol || '';
-      this.userId = userData.id || null;
-    } else {
+    // Evitar bucles de redirección: decide acceso SOLO por token
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
+      return;
     }
+
+    const userData = this.authService.getUserData();
+    this.userEmail = userData?.correo ?? '';
+    this.userRole = userData?.rol ?? '';
+    this.userId = userData?.id ?? null;
   }
 
   logout(): void {

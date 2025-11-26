@@ -1,0 +1,15 @@
+{
+  "__meta__": {
+    "descripcion": "Configuración para generar datos simulados de reportes",
+    "pacientes": 300,
+    "dentistas": 12,
+    "citas": 1200,
+    "procedimientos": 1800,
+    "meses": 6
+  },
+  "pacientes": [],
+  "citas": [],
+  "historiasClinicas": [],
+  "procedimientos": [],
+  "dentistas": []
+}

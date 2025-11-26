@@ -1,0 +1,131 @@
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-4">Reportes de Productividad</h1>
+
+  <div class="bg-white shadow rounded p-4 mb-6">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Rango de fechas</h2>
+        <p class="text-sm text-gray-600">Fuente: {{ fuenteLabel() }}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <label class="text-sm">Fuente</label>
+        <select #fuenteSel class="border rounded px-3 py-2" [value]="fuenteLabel()" (change)="onFuenteChange(fuenteSel.value)">
+          <option>Simulada</option>
+          <option>API</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 items-end mt-4">
+      <div>
+        <label class="block text-sm text-gray-600">Desde</label>
+        <input type="date" [(ngModel)]="desde" (change)="onRangoChange()" class="border rounded px-3 py-2" />
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Hasta</label>
+        <input type="date" [(ngModel)]="hasta" (change)="onRangoChange()" class="border rounded px-3 py-2" />
+      </div>
+      <button class="btn btn-primary" (click)="useMock ? cargarMock() : cargarBase()" [disabled]="cargandoBase()">Actualizar</button>
+      <button class="btn btn-secondary" (click)="exportCSV()">Exportar CSV</button>
+      <ng-container *ngIf="useMock">
+        <button class="btn btn-secondary" (click)="cargarMockDesdeAssets()">Cargar desde assets</button>
+        <label class="btn btn-secondary" style="cursor: pointer;">
+          Cargar JSON
+          <input type="file" accept="application/json" (change)="onFileUpload($event)" style="display:none;" />
+        </label>
+        <button class="btn btn-secondary" (click)="descargarJSON()">Descargar JSON</button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="indicadoresBase as b" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="card-kpi">
+      <div class="kpi-label">Pacientes</div>
+      <div class="kpi-value">{{ b.totalPacientes }}</div>
+    </div>
+    <div class="card-kpi">
+      <div class="kpi-label">Pacientes nuevos</div>
+      <div class="kpi-value">{{ b.pacientesNuevos }}</div>
+    </div>
+    <div class="card-kpi">
+      <div class="kpi-label">Citas (rango)</div>
+      <div class="kpi-value">{{ b.totalCitas }}</div>
+    </div>
+    <div class="card-kpi">
+      <div class="kpi-label">Promedio por día</div>
+      <div class="kpi-value">{{ b.promedioCitasPorDia }}</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white shadow rounded p-4">
+      <h3 class="text-lg font-semibold mb-2">Indicadores Base</h3>
+      <div *ngIf="cargandoBase()" class="text-gray-600">Cargando datos...</div>
+      <div *ngIf="!cargandoBase() && indicadoresBase as b">
+        <div class="mb-3">
+          <h4 class="font-semibold mb-1">Distribución de estados</h4>
+          <div class="space-y-2">
+            <div *ngFor="let kv of (b.citasPorEstado | keyvalue)" class="bar-row">
+              <span class="bar-label">{{kv.key}}</span>
+              <div class="bar">
+                <div class="bar-fill" [style.width.%]="(kv.value / b.totalCitas) * 100"></div>
+                <span class="bar-value">{{kv.value}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <h4 class="font-semibold mb-1">Citas por dentista</h4>
+          <table class="table">
+            <thead>
+              <tr><th>Dentista</th><th>Citas</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let kv of (b.citasPorDentista | keyvalue) | slice:0:8">
+                <td>{{kv.key}}</td>
+                <td>{{kv.value}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white shadow rounded p-4">
+      <h3 class="text-lg font-semibold mb-2">Procedimientos (opcional)</h3>
+      <p class="text-gray-600 mb-3">Carga bajo demanda para evitar saturación; funciona con {{ useMock ? 'datos simulados' : 'API' }}.</p>
+      <div class="flex items-center gap-3 mb-2">
+        <button class="btn btn-primary" (click)="cargarProcedimientos()" [disabled]="cargandoProcedimientos()">Cargar procedimientos</button>
+        <div *ngIf="cargandoProcedimientos()" class="text-gray-600">Progreso: {{ progresoProcedimientos() }}%</div>
+      </div>
+      <div *ngIf="indicadoresProcedimientos as p">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <ul class="space-y-2">
+              <li><span class="label">Total de procedimientos (rango):</span> {{ p.totalProcedimientos }}</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-1">Top 6 procedimientos</h4>
+            <table class="table">
+              <thead>
+                <tr><th>Procedimiento</th><th>Cantidad</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let kv of (p.procedimientosPorTipo | keyvalue) | slice:0:6">
+                  <td>{{kv.key}}</td>
+                  <td>{{kv.value}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="mt-4">
+          <h4 class="font-semibold mb-1">Procedimientos por tipo</h4>
+          <div class="chips">
+            <span *ngFor="let kv of (p.procedimientosPorTipo | keyvalue)" class="chip">{{kv.key}}: {{kv.value}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

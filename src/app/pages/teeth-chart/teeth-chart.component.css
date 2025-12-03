@@ -37,14 +37,17 @@
 .teeth-chart {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 24px;
   padding: 16px;
+  /* Evita que el ancho disponible comprima las filas y las haga saltar */
+  width: max-content;
 }
 
 .teeth-row {
   display: flex;
-  flex-wrap: wrap;
+  /* Cada fila debe mantenerse en una sola línea */
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 8px;
 }

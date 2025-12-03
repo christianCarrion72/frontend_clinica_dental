@@ -5,9 +5,11 @@
   </div>
   <textarea [value]="activePath" readonly placeholder="El path SVG aparecerá aquí..."></textarea>
   <div class="drawing-buttons">
-    <button (click)="s.startDrawing()">Comenzar dibujo</button>
-    <button (click)="s.reset()">Reiniciar</button>
+    <button (click)="s.startDrawing()" [disabled]="readonly">Comenzar dibujo</button>
+    <button (click)="s.reset()" [disabled]="readonly">Reiniciar</button>
     <button (click)="s.copyPath()">Copiar trazo</button>
-    <button (click)="s.undo()" [disabled]="!canUndo || !s.isDrawing()">Deshacer</button>
+    <button (click)="s.undo()" [disabled]="readonly || !canUndo">Deshacer</button>
+    <button (click)="s.closePath()" [disabled]="readonly || !canClose">Cerrar trazo</button>
+    <button (click)="s.stopDrawing()" [disabled]="readonly">Detener dibujo</button>
   </div>
 </div>

@@ -136,6 +136,7 @@ export class TeethChartComponent implements OnInit, OnChanges {
 
   svgWidth(view: 'front'|'top') { return Math.round(this.baseSizes[view].w * this.scale); }
   svgHeight(view: 'front'|'top') { return Math.round(this.baseSizes[view].h * this.scale); }
+  svgViewBox(view: 'front'|'top') { return `0 0 ${this.baseSizes[view].w} ${this.baseSizes[view].h}`; }
 
   offsetTransform(n: number, view: 'front'|'top') {
     const o = view === 'front' ? this.frontOffsets[n] : this.topOffsets[n];
@@ -144,11 +145,14 @@ export class TeethChartComponent implements OnInit, OnChanges {
 
   editingTooth: number | null = null;
 
-  onToothClick(n: number) { 
-    if (this.readonly) return;
-    console.log('Tooth clicked:', n); // Para debugging
+  onToothClick(n: number, view: 'front'|'top' = 'front') { 
+    console.log('Tooth clicked:', n, 'view:', view, 'readonly:', this.readonly); // Para debugging
     this.toothClick.emit(n); 
     this.loadToothData(n);
+    // Seleccionar la vista y preparar el editor
+    this.editorState.setView(view);
+    // En modo readonly no activar dibujo
+    this.editorState.isDrawing.set(!this.readonly);
     this.editingTooth = n; 
   }
 

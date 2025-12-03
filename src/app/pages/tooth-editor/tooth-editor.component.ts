@@ -21,6 +21,7 @@ import { DentalChartService } from '../../shared/dental-chart.service'
 export class ToothEditorComponent {
   @Input() patientChart!: PatientDentalChart
   @Input() toothNumber!: number
+  @Input() readonly = false
   @Output() close = new EventEmitter<void>()
   @Output() saved = new EventEmitter<PatientDentalChart>()
 
@@ -41,7 +42,22 @@ export class ToothEditorComponent {
     this.s.updateSvgPath(arr, false, 'top')
   }
 
+  // Shapes derivados del path SVG guardado (para renderizar al reabrir)
+  frontShapes() {
+    const d = this.s.frontSvgPath()
+    if (!d) return []
+    const fill = this.s.frontClosed() ? 'rgba(255,0,0,0.2)' : 'transparent'
+    return [{ type: 'path', data: d, fill, stroke: 'red', strokeWidth: 2 }]
+  }
+  topShapes() {
+    const d = this.s.topSvgPath()
+    if (!d) return []
+    const fill = this.s.topClosed() ? 'rgba(255,0,0,0.2)' : 'transparent'
+    return [{ type: 'path', data: d, fill, stroke: 'red', strokeWidth: 2 }]
+  }
+
   save() {
+    if (this.readonly) { return }
     const partial = {
       shapes: {
         front: this.s.frontSvgPath(),

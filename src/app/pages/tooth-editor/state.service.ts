@@ -38,6 +38,23 @@ export class ToothEditorStateService {
     if (!p) return
     navigator.clipboard?.writeText(p)
   }
+  stopDrawing() {
+    this.isDrawing.set(false)
+  }
+  closePath() {
+    const v = this.activeView()
+    if (v === 'front') {
+      const pts = this.frontPoints()
+      if (!pts.length || this.frontClosed()) return
+      this.frontClosed.set(true)
+      this.updateSvgPath(pts, true, 'front')
+    } else {
+      const pts = this.topPoints()
+      if (!pts.length || this.topClosed()) return
+      this.topClosed.set(true)
+      this.updateSvgPath(pts, true, 'top')
+    }
+  }
   undo() {
     if (this.activeView() === 'front') {
       const arr = this.frontPoints().slice(0, -1)

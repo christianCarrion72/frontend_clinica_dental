@@ -12,4 +12,7 @@ import { ToothEditorStateService } from '../../state.service'
 export class ActionButtonsComponent {
   s = inject(ToothEditorStateService)
   @Output() save = new EventEmitter<void>()
+
+  setMonitor() { this.s.updateDetail('action', 'monitor') }
+  setTreat() { this.s.updateDetail('action', 'treat') }
 }

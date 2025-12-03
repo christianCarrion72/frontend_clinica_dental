@@ -7,8 +7,10 @@
         <h2 class="heading">Patología - Diente {{toothNumber}}</h2>
         <app-pathology-types></app-pathology-types>
         <app-pathology-details></app-pathology-details>
-        <app-action-buttons (save)="save()"></app-action-buttons>
-        <app-path-drawer></app-path-drawer>
+        <ng-container *ngIf="!readonly">
+          <app-action-buttons (save)="save()"></app-action-buttons>
+        </ng-container>
+        <app-path-drawer [readonly]="readonly"></app-path-drawer>
       </div>
       <div class="center">
         <app-zones></app-zones>
@@ -19,11 +21,12 @@
           [width]="322" 
           [height]="380" 
           [imageSrc]="frontImage" 
-          [shapes]="[]" 
+          [shapes]="frontShapes()" 
           [points]="s.frontPoints()" 
           [isPathClosed]="s.frontClosed()" 
           [isDrawing]="s.isDrawing()" 
           [activeView]="s.activeView()" 
+          [readonly]="readonly"
           (drawPoint)="handleDrawFront($event)">
         </app-canvas-view>
         <app-canvas-view 
@@ -31,11 +34,12 @@
           [width]="172" 
           [height]="172" 
           [imageSrc]="topImage" 
-          [shapes]="[]" 
+          [shapes]="topShapes()" 
           [points]="s.topPoints()" 
           [isPathClosed]="s.topClosed()" 
           [isDrawing]="s.isDrawing()" 
           [activeView]="s.activeView()" 
+          [readonly]="readonly"
           (drawPoint)="handleDrawTop($event)">
         </app-canvas-view>
       </div>

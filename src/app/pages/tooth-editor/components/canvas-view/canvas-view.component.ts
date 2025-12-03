@@ -23,6 +23,7 @@ export class CanvasViewComponent {
   @Input() isDrawing = false
   @Input() activeView: View = 'front'
   @Input() pathData = ''
+  @Input() readonly = false
   @Output() drawPoint = new EventEmitter<Point>()
 
   get groupX() { return getGroupX(this.view) }
@@ -36,13 +37,18 @@ export class CanvasViewComponent {
   }
 
   onSvgClick(e: MouseEvent) {
-    if (!this.isDrawing) return
-    const svg = e.target as SVGElement
-    const rect = svg.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const adjusted = { x: x - this.groupX, y }
-    if (!isWithinBounds(adjusted, this.view)) return
-    this.drawPoint.emit(adjusted)
+    if (this.readonly) return;
+    // Sólo aceptar clicks si esta vista está activa
+    if (this.activeView !== this.view) return;
+    if (!this.isDrawing) return;
+    // Usar currentTarget para tomar el <svg> real, evitando hijos como <image>/<g>
+    const svg = e.currentTarget as SVGSVGElement | null;
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const adjusted = { x: x - this.groupX, y };
+    if (!isWithinBounds(adjusted, this.view)) return;
+    this.drawPoint.emit(adjusted);
   }
 }
